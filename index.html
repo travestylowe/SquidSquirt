@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squid Squirt</title>
+  <meta name="description" content="Press the squid. You know you want to.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Squid Squirt">
+  <meta property="og:description" content="Press the squid. You know you want to.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://squidsquirt.com">
+  <!-- og:image: add a screenshot here when you have one -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="ink-canvas"></canvas>
+
+  <div id="app">
+    <div id="counter-section">
+      <div id="counter-label">total squirts</div>
+      <div id="counter">0</div>
+    </div>
+
+    <button id="squid-btn" aria-label="Squirt the squid">
+      <svg id="squid-svg" viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bodyGrad" cx="38%" cy="30%" r="65%">
+            <stop offset="0%"   stop-color="#c084fc"/>
+            <stop offset="55%"  stop-color="#9333ea"/>
+            <stop offset="100%" stop-color="#581c87"/>
+          </radialGradient>
+          <radialGradient id="eyeGrad" cx="30%" cy="28%" r="70%">
+            <stop offset="0%"   stop-color="#faf5ff"/>
+            <stop offset="100%" stop-color="#e9d5ff"/>
+          </radialGradient>
+          <radialGradient id="finGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%"   stop-color="#7e22ce"/>
+            <stop offset="100%" stop-color="#4c1d95"/>
+          </radialGradient>
+        </defs>
+
+        <g id="squid-body">
+
+          <!-- Mantle -->
+          <path d="M200 18C246 18 274 56 274 113C274 164 249 190 200 190C151 190 126 164 126 113C126 56 154 18 200 18Z"
+                fill="url(#bodyGrad)"/>
+
+          <!-- Side fins -->
+          <path d="M126 84C98 69 86 110 113 137C122 146 126 138 126 138Z" fill="url(#finGrad)"/>
+          <path d="M274 84C302 69 314 110 287 137C278 146 274 138 274 138Z" fill="url(#finGrad)"/>
+
+          <!-- Mantle sheen -->
+          <ellipse cx="176" cy="62" rx="20" ry="30"
+                   fill="rgba(255,255,255,0.07)" transform="rotate(-10 176 62)"/>
+
+          <!-- Left eye -->
+          <circle cx="172" cy="116" r="28" fill="url(#eyeGrad)"/>
+          <circle cx="172" cy="116" r="28" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
+          <circle id="pupil-left"  cx="174" cy="118" r="17" fill="#160030"/>
+          <circle cx="164" cy="108" r="5.5" fill="white" opacity="0.85"/>
+          <circle cx="160" cy="104" r="2.5" fill="white" opacity="0.5"/>
+
+          <!-- Right eye -->
+          <circle cx="228" cy="116" r="28" fill="url(#eyeGrad)"/>
+          <circle cx="228" cy="116" r="28" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
+          <circle id="pupil-right" cx="230" cy="118" r="17" fill="#160030"/>
+          <circle cx="220" cy="108" r="5.5" fill="white" opacity="0.85"/>
+          <circle cx="216" cy="104" r="2.5" fill="white" opacity="0.5"/>
+
+          <!-- Blush cheeks (hidden by default, shown via JS) -->
+          <ellipse id="blush-left"  cx="153" cy="141" rx="22" ry="11" fill="#f472b6" opacity="0"/>
+          <ellipse id="blush-right" cx="247" cy="141" rx="22" ry="11" fill="#f472b6" opacity="0"/>
+
+          <!-- Collar -->
+          <ellipse cx="200" cy="193" rx="61" ry="14" fill="#6b21a8"/>
+
+          <!-- Arms (8) -->
+          <g stroke="#7e22ce" stroke-width="8" stroke-linecap="round" fill="none">
+            <path d="M158 198Q142 240 136 280"/>
+            <path d="M172 203Q160 246 158 285"/>
+            <path d="M186 206Q178 250 178 290"/>
+            <path d="M200 207Q198 252 199 292"/>
+            <path d="M214 206Q220 250 222 290"/>
+            <path d="M228 203Q238 246 242 285"/>
+            <path d="M242 198Q258 240 264 280"/>
+          </g>
+
+          <!-- Long feeding tentacles -->
+          <g stroke="#5b1a8a" stroke-width="6" stroke-linecap="round" fill="none">
+            <path d="M176 203Q150 264 132 314Q124 338 137 344Q151 348 153 330Q156 317 165 306"/>
+            <path d="M224 203Q250 264 268 314Q276 338 263 344Q249 348 247 330Q244 317 235 306"/>
+          </g>
+
+          <!-- Tentacle clubs -->
+          <ellipse cx="141" cy="343" rx="15" ry="8" fill="#4c1d95" transform="rotate(-20 141 343)"/>
+          <ellipse cx="259" cy="343" rx="15" ry="8" fill="#4c1d95" transform="rotate(20 259 343)"/>
+          <g fill="#3b1178">
+            <circle cx="136" cy="340" r="2.5"/>
+            <circle cx="142" cy="337" r="2.5"/>
+            <circle cx="148" cy="341" r="2.5"/>
+            <circle cx="254" cy="340" r="2.5"/>
+            <circle cx="260" cy="337" r="2.5"/>
+            <circle cx="266" cy="341" r="2.5"/>
+          </g>
+
+          <!-- Ink siphon -->
+          <path d="M192 184C188 200 188 218 200 222C212 218 212 200 208 184Z" fill="#4a1278"/>
+          <ellipse cx="200" cy="223" rx="10" ry="5" fill="#3b0f66"/>
+
+        </g>
+      </svg>
+    </button>
+
+    <div id="hint">▾ squeeze me ▾</div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

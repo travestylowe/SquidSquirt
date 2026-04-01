@@ -1,0 +1,165 @@
+/* ────────────────────────────────────────────
+   squidsquirt.com — styles
+   ──────────────────────────────────────────── */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #030912;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Boogaloo', cursive;
+}
+
+/* Deep ocean background glow */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, #071a3a 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Ink canvas (full-screen overlay) ── */
+#ink-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* ── Main layout ── */
+#app {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Counter ── */
+#counter-section {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+#counter-label {
+  font-size: 1rem;
+  color: #3d2660;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+#counter {
+  font-family: 'VT323', monospace;
+  font-size: 6rem;
+  line-height: 1;
+  color: #e9d5ff;
+  min-width: 6ch;
+  text-align: center;
+  display: inline-block;
+  text-shadow: 0 0 25px #a855f7, 0 0 60px rgba(168, 85, 247, 0.3);
+}
+
+#counter.pop {
+  animation: counter-pop 0.25s cubic-bezier(0.34, 1.8, 0.64, 1) forwards;
+}
+
+@keyframes counter-pop {
+  50% {
+    transform: scale(1.35);
+    color: #f0abfc;
+  }
+}
+
+/* ── Squid button ── */
+#squid-btn {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  outline: none;
+  border: none;
+  background: none;
+  padding: 0;
+  display: block;
+  filter: drop-shadow(0 0 22px rgba(168, 85, 247, 0.55));
+  transition: filter 0.3s;
+}
+
+#squid-btn:hover {
+  filter: drop-shadow(0 0 38px rgba(200, 120, 255, 0.75));
+}
+
+#squid-svg {
+  width: 260px;
+  display: block;
+}
+
+/* Squish + spring animation, pivoting from upper mantle */
+#squid-body {
+  transform-box: fill-box;
+  transform-origin: 50% 28%;
+}
+
+#squid-body.squish {
+  animation: squish 0.36s ease forwards;
+}
+
+@keyframes squish {
+  0%   { transform: scaleX(1)    scaleY(1);    }
+  22%  { transform: scaleX(1.32) scaleY(0.6);  }
+  60%  { transform: scaleX(0.9)  scaleY(1.1);  }
+  80%  { transform: scaleX(1.05) scaleY(0.96); }
+  100% { transform: scaleX(1)    scaleY(1);    }
+}
+
+/* Blush cheeks */
+#blush-left,
+#blush-right {
+  transition: opacity 0.4s;
+}
+
+/* ── Hint text ── */
+#hint {
+  font-size: 0.9rem;
+  color: #3d2660;
+  letter-spacing: 0.15em;
+  margin-top: 14px;
+  opacity: 0.4;
+  animation: hint-pulse 2.5s ease-in-out infinite;
+  transition: opacity 0.6s;
+}
+
+@keyframes hint-pulse {
+  50% {
+    opacity: 1;
+    color: #6a3a9a;
+  }
+}
+
+/* ── Ambient bubbles ── */
+.bubble {
+  position: fixed;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  pointer-events: none;
+  z-index: 1;
+  animation: bubble-rise linear infinite;
+}
+
+@keyframes bubble-rise {
+  0%   { transform: translateY(0);      opacity: 0;   }
+  10%  {                                opacity: 0.8; }
+  90%  {                                opacity: 0.4; }
+  100% { transform: translateY(-110vh); opacity: 0;   }
+}
