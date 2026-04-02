@@ -152,7 +152,7 @@ body::before {
 
 #global-counter {
   font-family: 'VT323', monospace;
-  font-size: 1.25rem;
+  font-size: 2.5rem;
   letter-spacing: 0.04em;
   text-transform: none;
   color: rgba(255, 255, 255, 0.55);
@@ -580,7 +580,7 @@ body::before {
   }
 
   #global-counter {
-    font-size: 1rem;
+    font-size: 2rem;
   }
 }
 
