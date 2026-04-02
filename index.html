@@ -10,7 +10,7 @@
   <meta property="og:title" content="Squid Squirt">
   <meta property="og:description" content="Press the squid. You know you want to.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://squidsquirt.com">
+  <meta property="og:url" content="https://squidsquirts.com">
   <!-- og:image: add a screenshot here when you have one -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,9 @@
       <div id="counter-label">total squirts</div>
       <div id="counter">0</div>
     </div>
+  </div>
 
+  <div id="squid-wrap">
     <button id="squid-btn" aria-label="Squirt the squid">
       <svg id="squid-svg" viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -45,6 +47,7 @@
           </radialGradient>
         </defs>
 
+        <g id="squid-drift-layer">
         <g id="squid-body">
 
           <!-- Mantle -->
@@ -61,14 +64,14 @@
 
           <!-- Left eye -->
           <circle cx="172" cy="116" r="28" fill="url(#eyeGrad)"/>
-          <circle cx="172" cy="116" r="28" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
+          <circle class="squid-eye-outline" cx="172" cy="116" r="28" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
           <circle id="pupil-left"  cx="174" cy="118" r="17" fill="#160030"/>
           <circle cx="164" cy="108" r="5.5" fill="white" opacity="0.85"/>
           <circle cx="160" cy="104" r="2.5" fill="white" opacity="0.5"/>
 
           <!-- Right eye -->
           <circle cx="228" cy="116" r="28" fill="url(#eyeGrad)"/>
-          <circle cx="228" cy="116" r="28" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
+          <circle class="squid-eye-outline" cx="228" cy="116" r="28" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
           <circle id="pupil-right" cx="230" cy="118" r="17" fill="#160030"/>
           <circle cx="220" cy="108" r="5.5" fill="white" opacity="0.85"/>
           <circle cx="216" cy="104" r="2.5" fill="white" opacity="0.5"/>
@@ -78,10 +81,10 @@
           <ellipse id="blush-right" cx="247" cy="141" rx="22" ry="11" fill="#f472b6" opacity="0"/>
 
           <!-- Collar -->
-          <ellipse cx="200" cy="193" rx="61" ry="14" fill="#6b21a8"/>
+          <ellipse id="squid-collar" cx="200" cy="193" rx="61" ry="14" fill="#6b21a8"/>
 
           <!-- Arms (8) -->
-          <g stroke="#7e22ce" stroke-width="8" stroke-linecap="round" fill="none">
+          <g id="squid-arms" stroke="#7e22ce" stroke-width="8" stroke-linecap="round" fill="none">
             <path d="M158 198Q142 240 136 280"/>
             <path d="M172 203Q160 246 158 285"/>
             <path d="M186 206Q178 250 178 290"/>
@@ -92,15 +95,15 @@
           </g>
 
           <!-- Long feeding tentacles -->
-          <g stroke="#5b1a8a" stroke-width="6" stroke-linecap="round" fill="none">
+          <g id="squid-feeders" stroke="#5b1a8a" stroke-width="6" stroke-linecap="round" fill="none">
             <path d="M176 203Q150 264 132 314Q124 338 137 344Q151 348 153 330Q156 317 165 306"/>
             <path d="M224 203Q250 264 268 314Q276 338 263 344Q249 348 247 330Q244 317 235 306"/>
           </g>
 
           <!-- Tentacle clubs -->
-          <ellipse cx="141" cy="343" rx="15" ry="8" fill="#4c1d95" transform="rotate(-20 141 343)"/>
-          <ellipse cx="259" cy="343" rx="15" ry="8" fill="#4c1d95" transform="rotate(20 259 343)"/>
-          <g fill="#3b1178">
+          <ellipse class="squid-club" cx="141" cy="343" rx="15" ry="8" fill="#4c1d95" transform="rotate(-20 141 343)"/>
+          <ellipse class="squid-club" cx="259" cy="343" rx="15" ry="8" fill="#4c1d95" transform="rotate(20 259 343)"/>
+          <g id="squid-club-dots" fill="#3b1178">
             <circle cx="136" cy="340" r="2.5"/>
             <circle cx="142" cy="337" r="2.5"/>
             <circle cx="148" cy="341" r="2.5"/>
@@ -110,17 +113,47 @@
           </g>
 
           <!-- Ink siphon -->
-          <path d="M192 184C188 200 188 218 200 222C212 218 212 200 208 184Z" fill="#4a1278"/>
-          <ellipse cx="200" cy="223" rx="10" ry="5" fill="#3b0f66"/>
+          <path id="squid-siphon" d="M192 184C188 200 188 218 200 222C212 218 212 200 208 184Z" fill="#4a1278"/>
+          <ellipse id="squid-siphon-mouth" cx="200" cy="223" rx="10" ry="5" fill="#3b0f66"/>
 
+        </g>
         </g>
       </svg>
     </button>
 
-    <div id="hint">▾ squeeze me ▾</div>
+    <div id="hint" aria-live="polite">▾ squeeze me ▾</div>
   </div>
 
+  <!-- Floating control buttons -->
+  <div id="controls" aria-label="Game controls">
+    <button id="mute-btn" aria-label="Toggle sound" title="Toggle sound">
+      <svg class="ctrl-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M10 2L5 7H2v6h3l5 5V2z" fill="currentColor"/>
+        <path class="sound-wave" d="M13.5 5.5c1.6 1.3 2.5 3 2.5 4.5s-.9 3.2-2.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button id="share-btn" aria-label="Share your score" title="Share">
+      <svg class="ctrl-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M10 2l4 4h-3v6H9V6H6l4-4z" fill="currentColor"/>
+        <path d="M4 12v4h12v-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button id="accessory-btn" aria-label="Squid accessories" title="Accessories">
+      <svg class="ctrl-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M10 1l2.5 5.5L18 7.5l-4 4.5 1 6L10 15l-5 3 1-6-4-4.5 5.5-1z" fill="currentColor"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Accessory picker panel -->
+  <div id="accessory-panel" class="side-panel"></div>
+
+  <footer id="global-bar" aria-label="Global squirt total">
+    <span id="global-counter-label">global squirts</span>
+    <span id="global-counter">—</span>
+  </footer>
+
   <script src="config.js"></script>
-  <script src="main.js"></script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>

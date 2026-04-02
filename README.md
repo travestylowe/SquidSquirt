@@ -14,7 +14,11 @@ npx serve .
 python -m http.server 8080
 ```
 
-Open `http://localhost:8080` (or open `index.html` in a browser — works for local testing).
+Use **`npm start`** or any static HTTP server. The app loads ES modules and JSON over `fetch`; opening `index.html` as a `file://` URL usually **fails** (use localhost).
+
+```bash
+npm run check   # syntax-check all .js files (Node)
+```
 
 ---
 
@@ -23,23 +27,35 @@ Open `http://localhost:8080` (or open `index.html` in a browser — works for lo
 ```
 squidsquirt/
 ├── index.html
-├── config.js              # Supabase URL + anon key (empty = localStorage only)
+├── config.js              # Supabase URL + anon key + optional debug
 ├── config.example.js      # template for real keys
 ├── style.css
-├── main.js                # game logic, audio, ink, counter backend switch
+├── data/                  # taunts, thanks, color palettes (JSON)
+├── js/                    # ES modules (entry: app.js)
+├── docs/
+│   └── ROADMAP.md         # completed features & planned work
+├── BEHAVIOR.md            # frozen behavior notes for regressions
+├── CLAUDE.md              # project instructions for Claude Code
 ├── supabase/sql/
 │   └── init_counters.sql  # copy-paste into Supabase SQL editor
-├── package.json           # npm start → local static server
+├── package.json           # npm start → local static server; npm run check
 └── README.md
 ```
 
-Everything is vanilla HTML/CSS/JS. No build step, no runtime dependencies.
+Everything is vanilla HTML/CSS/JS. No bundler; no runtime npm dependencies in the browser.
 
 ---
 
-## Counter backend
+## Counters (local vs global)
 
-By default the counter uses **localStorage** (per-browser). For a **shared global** count:
+- **Total squirts** (top): your **local** count, stored in **`localStorage`** (`sqc`). Drives palette milestones and confetti timing.
+- **Global squirts** (footer): optional **shared** total from Supabase when `config.js` has both URL and anon key. Shows `—` if not configured or if the load request fails.
+
+---
+
+## Counter backend (global)
+
+By default the **global** footer uses **no server** (`—`). For a **shared global** count:
 
 ### 1. Create a Supabase project
 
@@ -61,7 +77,7 @@ window.SQUIDSQUIRT_CONFIG = {
 };
 ```
 
-Leave either field empty to keep using localStorage only.
+Leave either field empty to skip the global counter (local squirts still work).
 
 The anon key is intended for client use; RLS and the `increment_squirt` function limit what it can do.
 
@@ -116,14 +132,6 @@ Each squirt picks a random `power` value between 0 and 1. Power controls:
 
 ---
 
-## Ideas / TODO
+## Roadmap
 
-- [ ] Milestone reactions (confetti at 100, 1000, 10,000 squirts)
-- [ ] Sound toggle (polite company)
-- [ ] Share button (“I contributed squirt #8,432”)
-- [ ] Idle animations (tentacle wiggle, blink)
-- [ ] Mobile haptic feedback (`navigator.vibrate`)
-- [ ] Ink color unlocks at milestones
-- [ ] Squid customization (hats, accessories)
-- [ ] Squid grows slightly with total squirts
-- [ ] Leaderboard (needs auth — probably out of scope)
+See [docs/ROADMAP.md](docs/ROADMAP.md) for completed features and planned work.
