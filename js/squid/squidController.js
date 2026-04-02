@@ -29,8 +29,8 @@ export function createSquidController(refs, palettes) {
   const nPalettes = palettes.length;
   const pageLoadTime = performance.now();
   let lastSquirtTime = null;
-  let baseSquidBtnW = 260;
-  let baseSquidBtnH = 280;
+  let baseSquidBtnW = squidSvg.clientWidth || 260;
+  let baseSquidBtnH = squidSvg.clientHeight || 280;
   let squidScale = 1;
 
   const EYES = [

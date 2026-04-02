@@ -117,7 +117,7 @@ body::before {
 
 #counter {
   font-family: 'VT323', monospace;
-  font-size: 6rem;
+  font-size: clamp(3rem, 10vw, 6rem);
   line-height: 1;
   color: #fff;
   min-width: 6ch;
@@ -190,7 +190,7 @@ body::before {
 }
 
 #squid-svg {
-  width: 260px;
+  width: clamp(140px, 38vw, 260px);
   display: block;
   transform-origin: 50% 42%;
   transform: scale(var(--squid-idle-scale, 1));
@@ -537,6 +537,51 @@ body::before {
 @keyframes milestone-flash-anim {
   0%   { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  #counter-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+  }
+
+  #controls {
+    right: 8px;
+    gap: 6px;
+    bottom: calc(42px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #controls button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ctrl-icon { width: 20px; height: 20px; }
+
+  .side-panel {
+    width: calc(100vw - 70px);
+    max-height: 50vh;
+    right: -100vw;
+  }
+
+  .side-panel.open {
+    right: 52px;
+  }
+
+  .speech-bubble {
+    font-size: 1rem;
+    padding: 8px 14px;
+    max-width: min(80vw, 300px);
+  }
+
+  #global-bar {
+    font-size: 0.65rem;
+  }
+
+  #global-counter {
+    font-size: 1rem;
+  }
 }
 
 /* ── Reduced motion ── */
