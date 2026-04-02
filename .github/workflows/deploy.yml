@@ -21,9 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate config.js from secrets
+      - name: Build site with config
         run: |
-          cat > config.js << 'TMPL'
+          mkdir _site
+          rsync -a --exclude=_site --exclude=.git --exclude=.github ./ _site/
+          cat > _site/config.js << 'TMPL'
           window.SQUIDSQUIRT_CONFIG = {
             supabaseUrl: '${{ secrets.SUPABASE_URL }}',
             supabaseAnonKey: '${{ secrets.SUPABASE_ANON_KEY }}',
@@ -33,7 +35,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4
