@@ -145,8 +145,25 @@
     </button>
   </div>
 
-  <!-- Accessory picker panel -->
-  <div id="accessory-panel" class="side-panel"></div>
+  <!-- Unlock picker panel (tabbed: Hats / Ink / Confetti) -->
+  <div id="unlock-panel" class="side-panel">
+    <div id="unlock-tabs">
+      <button class="unlock-tab active" data-tab="hats">Hats</button>
+      <button class="unlock-tab" data-tab="ink">Ink</button>
+      <button class="unlock-tab" data-tab="confetti">Confetti</button>
+    </div>
+    <div id="unlock-tab-content"></div>
+  </div>
+
+  <!-- Payment modal overlay -->
+  <div id="payment-modal" class="payment-modal" aria-modal="true" role="dialog" hidden>
+    <div class="payment-modal-inner">
+      <button id="payment-close" class="payment-close" aria-label="Close">&times;</button>
+      <div id="payment-title" class="payment-title"></div>
+      <div id="payment-body" class="payment-body"></div>
+      <div id="payment-actions" class="payment-actions"></div>
+    </div>
+  </div>
 
   <footer id="global-bar" aria-label="Global squirt total">
     <span id="global-counter-label">global squirts</span>
