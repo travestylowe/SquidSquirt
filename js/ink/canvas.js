@@ -23,6 +23,16 @@ export function createInkSystem(canvasEl) {
   let stains = [];    /* pooled blobs (stuck on screen) */
   let inkHue = 272;
 
+  /**
+   * Render mode for the next spawnInk call.
+   * Set externally by the unlock manager before each squirt.
+   *   - { mode: 'ink', hue: number|function }
+   *   - { mode: 'sprinkle', huePool: number[] }
+   *   - { mode: 'emoji', emojis: string[] }
+   * Default (null) = use current inkHue from palette.
+   */
+  let renderMode = null;
+
   const MAX_STAINS = 600;
   const POOL_SPEED = 1.4;
   /** Blur radius for the cloud composite (px). */
@@ -54,6 +64,12 @@ export function createInkSystem(canvasEl) {
     const maxSpread = Math.hypot(W, H) * 0.6;
     const spread = 120 + maxSpread * inf;
 
+    /* Emoji mode uses a separate lightweight emitter — skip blob physics */
+    if (renderMode && renderMode.mode === 'emoji') {
+      spawnEmojiScatter(originX, originY, power, inflation, count);
+      return;
+    }
+
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
       const speed = (2.5 + Math.random() * 8) * Math.pow(power, 0.5)
@@ -62,15 +78,27 @@ export function createInkSystem(canvasEl) {
       const sizeBoost = 1 + inf * 5;
       const r = (12 + Math.random() * 22) * Math.pow(power, 0.42) * sizeBoost;
 
+      /* Determine hue for this particle based on render mode */
+      let blobHue;
+      if (renderMode && renderMode.mode === 'sprinkle') {
+        const pool = renderMode.huePool;
+        blobHue = pool[Math.floor(Math.random() * pool.length)];
+      } else if (renderMode && renderMode.mode === 'ink' && typeof renderMode.hue === 'function') {
+        blobHue = renderMode.hue();
+      } else if (renderMode && renderMode.mode === 'ink') {
+        blobHue = renderMode.hue;
+      } else {
+        blobHue = inkHue;
+      }
+
       blobs.push({
         x: originX + (Math.random() - 0.5) * spread * 0.2,
         y: originY + (Math.random() - 0.5) * spread * 0.2,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         r,
-        /* Each blob grows as it slows — simulates diffusion */
         maxR: r * (2.0 + Math.random() * 1.5),
-        hue: inkHue - 8 + Math.random() * 20,
+        hue: blobHue - 8 + Math.random() * 20,
         sat: 25 + Math.random() * 25,
         lt: 1 + Math.random() * 6,
         alpha: 0.6 + Math.random() * 0.3,
@@ -86,12 +114,25 @@ export function createInkSystem(canvasEl) {
         const ang = Math.random() * Math.PI * 2;
         const dist = Math.random() * megaSpread;
         const sr = (25 + Math.random() * 45) * (1 + inf * 2);
+
+        let stainHue;
+        if (renderMode && renderMode.mode === 'sprinkle') {
+          const pool = renderMode.huePool;
+          stainHue = pool[Math.floor(Math.random() * pool.length)];
+        } else if (renderMode && renderMode.mode === 'ink' && typeof renderMode.hue === 'function') {
+          stainHue = renderMode.hue();
+        } else if (renderMode && renderMode.mode === 'ink') {
+          stainHue = renderMode.hue;
+        } else {
+          stainHue = inkHue;
+        }
+
         stains.push({
           x: originX + Math.cos(ang) * dist,
           y: originY + Math.sin(ang) * dist,
           r: sr,
           alpha: 0.4 + Math.random() * 0.3,
-          hue: inkHue - 5 + Math.random() * 12,
+          hue: stainHue - 5 + Math.random() * 12,
           sat: 25 + Math.random() * 20,
           lt: 1 + Math.random() * 5,
         });
@@ -198,11 +239,76 @@ export function createInkSystem(canvasEl) {
     return total / (w * h);
   }
 
+  /** Lightweight scatter for emoji mode — no drips, stains, or blur. */
+  function spawnEmojiScatter(originX, originY, power, inflation, count) {
+    const inf = inflation || 0;
+    const emojis = renderMode.emojis;
+    /* Fewer particles than ink for a cleaner look */
+    const emojiCount = Math.min(Math.floor(count * 0.35), 60);
+    const maxSpread = Math.hypot(W, H) * 0.6;
+    const spread = 120 + maxSpread * inf;
+
+    const pieces = [];
+
+    for (let i = 0; i < emojiCount; i++) {
+      const glyph = emojis[Math.floor(Math.random() * emojis.length)];
+      const angle = Math.random() * Math.PI * 2;
+      const speed = (3 + Math.random() * 7) * Math.pow(power, 0.5)
+                  + inf * (3 + Math.random() * 8);
+      const size = 16 + Math.random() * 18;
+
+      const el = document.createElement('div');
+      el.className = 'emoji-particle';
+      el.textContent = glyph;
+      el.style.fontSize = size + 'px';
+      el.style.left = '0px';
+      el.style.top = '0px';
+      document.body.appendChild(el);
+
+      pieces.push({
+        el,
+        x: originX + (Math.random() - 0.5) * spread * 0.15,
+        y: originY + (Math.random() - 0.5) * spread * 0.15,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        alpha: 1,
+        alive: true,
+      });
+    }
+
+    function tick() {
+      let active = 0;
+      for (const p of pieces) {
+        if (!p.alive) continue;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.15; /* light gravity */
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.alpha -= 0.012;
+
+        if (p.alpha <= 0 || p.y > H + 40 || p.x < -40 || p.x > W + 40) {
+          p.alive = false;
+          p.el.remove();
+          continue;
+        }
+
+        p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
+        p.el.style.opacity = p.alpha;
+        active++;
+      }
+      if (active > 0) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
   return {
     resize,
     spawnInk,
     step,
     setInkHue(h) { inkHue = h; },
+    setRenderMode(mode) { renderMode = mode; },
     getInkDensityAt,
   };
 }
