@@ -524,6 +524,329 @@ body::before {
   cursor: not-allowed;
 }
 
+/* ── Unlock picker tabs ── */
+#unlock-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.unlock-tab {
+  flex: 1;
+  padding: 6px 4px;
+  border: 1px solid rgba(0, 80, 160, 0.15);
+  border-radius: 6px;
+  background: rgba(0, 80, 160, 0.06);
+  color: #1e3a5f;
+  font-family: 'Boogaloo', cursive;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.unlock-tab:hover {
+  background: rgba(0, 80, 160, 0.14);
+}
+
+.unlock-tab:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+.unlock-tab.active {
+  background: rgba(88, 28, 135, 0.18);
+  border-color: #7c3aed;
+  color: #581c87;
+}
+
+/* Section headers inside tabs */
+.unlock-section-title {
+  font-size: 0.72rem;
+  color: #581c87;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 10px 0 6px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(88, 28, 135, 0.15);
+}
+
+.unlock-section-title:first-child {
+  margin-top: 0;
+}
+
+/* Buy button on locked items */
+.unlock-buy-btn {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border: 1px solid rgba(88, 28, 135, 0.3);
+  border-radius: 4px;
+  background: rgba(88, 28, 135, 0.1);
+  color: #7c3aed;
+  font-family: 'Boogaloo', cursive;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.unlock-buy-btn:hover {
+  background: rgba(88, 28, 135, 0.22);
+}
+
+/* ── Emoji particles (scattered by ink system) ── */
+.emoji-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 21;
+  will-change: transform, opacity;
+  line-height: 1;
+}
+
+/* ── Payment modal ── */
+.payment-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.payment-modal[hidden] {
+  display: none;
+}
+
+.payment-modal-inner {
+  position: relative;
+  width: min(90vw, 380px);
+  max-height: 80vh;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  padding: 24px;
+  font-family: 'Boogaloo', cursive;
+  color: #1e3a5f;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.payment-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+}
+
+.payment-close:hover {
+  color: #475569;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.payment-close:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+.payment-title {
+  font-size: 1.2rem;
+  color: #581c87;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.payment-body {
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.payment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.payment-actions input[type="text"],
+.payment-actions textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 80, 160, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  font-family: 'Boogaloo', cursive;
+  font-size: 0.9rem;
+  color: #1e3a5f;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.payment-actions input[type="text"]:focus,
+.payment-actions textarea:focus {
+  border-color: #7c3aed;
+}
+
+.payment-actions textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.payment-submit-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #7c3aed;
+  color: #fff;
+  font-family: 'Boogaloo', cursive;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.payment-submit-btn:hover {
+  background: #6d28d9;
+}
+
+.payment-submit-btn:active {
+  transform: scale(0.96);
+}
+
+.payment-submit-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.payment-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Progress bar (patience payment) */
+.payment-progress {
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 80, 160, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.payment-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  border-radius: 10px;
+  transition: width 0.3s ease-out;
+  width: 0%;
+}
+
+/* Queue display (wait in line payment) */
+.payment-queue-number {
+  font-size: 2.5rem;
+  color: #7c3aed;
+  font-family: 'VT323', monospace;
+  margin: 8px 0;
+}
+
+/* Checkbox list (promise payment) */
+.payment-promise-list {
+  text-align: left;
+  list-style: none;
+  padding: 0;
+}
+
+.payment-promise-list li {
+  padding: 6px 0;
+}
+
+.payment-promise-list label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+
+.payment-promise-list input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #7c3aed;
+}
+
+/* Trivia choices */
+.payment-trivia-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.payment-trivia-choice {
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 80, 160, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 80, 160, 0.06);
+  color: #1e3a5f;
+  font-family: 'Boogaloo', cursive;
+  font-size: 0.88rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.payment-trivia-choice:hover {
+  background: rgba(0, 80, 160, 0.14);
+  border-color: rgba(0, 80, 160, 0.3);
+}
+
+.payment-trivia-choice.correct {
+  background: rgba(22, 163, 74, 0.2);
+  border-color: #16a34a;
+  color: #15803d;
+}
+
+.payment-trivia-choice.wrong {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+/* Easter egg reveal animation */
+.easter-egg-reveal {
+  position: fixed;
+  z-index: 55;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  animation: easter-egg-pop 1.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes easter-egg-pop {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  30%  { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+  50%  { transform: translate(-50%, -50%) scale(1); }
+  80%  { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1) translateY(-40px); opacity: 0; }
+}
+
 /* ── Milestone flash ── */
 .milestone-flash {
   position: fixed;
@@ -593,4 +916,6 @@ body::before {
   }
   .milestone-flash { animation-duration: 0.01s; }
   .side-panel { transition-duration: 0.01s; }
+  .easter-egg-reveal { animation-duration: 0.01s; }
+  .payment-modal-inner { transition-duration: 0.01s; }
 }
