@@ -153,7 +153,7 @@ async function main() {
     if (cooldown) return;
     cooldown = true;
 
-    const readyToSwim = squid.onSquirtShrinkScale();
+    squid.onSquirtShrinkScale();
 
     const power = Math.random();
     const isFart = Math.random() < GAME.FART_CHANCE;
@@ -175,11 +175,8 @@ async function main() {
 
     bumpCounter();
 
-    /* Only swim away once the squid has been squeezed back to normal size.
-       Pass the ink density scorer so the squid surfaces in a clear area. */
-    if (readyToSwim) {
-      squid.swimAway(power, ink.getInkDensityAt, () => accessories.onSurface());
-    }
+    /* Always swim away after squirt */
+    squid.swimAway(power, ink.getInkDensityAt, () => accessories.onSurface());
 
     /* Haptic feedback (mobile) */
     if (navigator.vibrate) {
