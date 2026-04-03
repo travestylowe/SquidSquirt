@@ -8,3 +8,4 @@ node_modules/
 config.js
 files.zip
 .claude/
+.worktrees/
