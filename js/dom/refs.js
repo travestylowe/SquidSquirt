@@ -29,6 +29,15 @@ export function getDomRefs() {
     muteBtn: document.getElementById('mute-btn'),
     shareBtn: document.getElementById('share-btn'),
     accessoryBtn: document.getElementById('accessory-btn'),
-    accessoryPanel: document.getElementById('accessory-panel'),
+    /* Unlock picker (tabbed panel) */
+    unlockPanel: document.getElementById('unlock-panel'),
+    unlockTabs: document.getElementById('unlock-tabs'),
+    unlockTabContent: document.getElementById('unlock-tab-content'),
+    /* Payment modal */
+    paymentModal: document.getElementById('payment-modal'),
+    paymentClose: document.getElementById('payment-close'),
+    paymentTitle: document.getElementById('payment-title'),
+    paymentBody: document.getElementById('payment-body'),
+    paymentActions: document.getElementById('payment-actions'),
   };
 }
