@@ -82,4 +82,31 @@ export const GAME = {
 
   // Accessories (localStorage key)
   ACCESSORY_KEY: 'sqa',
+
+  // Unlock system (localStorage keys)
+  UNLOCK_KEY: 'squ',       /* unlocked item IDs */
+  UNLOCK_PIN_KEY: 'sqp',   /* pinned selections */
+  UNLOCK_TXN_KEY: 'sqt',   /* microtransaction completions */
+
+  // Ink color unlock thresholds (squirt count)
+  INK_THRESHOLDS: [10, 30, 60, 100, 175, 300, 500, 1000],
+
+  // Sprinkle unlock thresholds (squirt count)
+  SPRINKLE_THRESHOLDS: [20, 50, 80, 125, 225, 400, 650, 1000],
+
+  // Confetti shape unlock thresholds (squirt count)
+  CONFETTI_THRESHOLDS: [40, 90, 150, 350, 750],
+
+  // Easter egg detection
+  EASTER_EGG_RAPID_COUNT: 10,       /* squirts needed in window */
+  EASTER_EGG_RAPID_WINDOW_MS: 3000, /* time window for rapid squirts */
+  EASTER_EGG_IDLE_MS: 300000,       /* 5 minutes idle for skulls */
+  EASTER_EGG_SESSION_COUNT: 100,    /* squirts in one session for hearts */
+
+  // Payment timing constants (ms)
+  PAYMENT_PATIENCE_MS: 30000,       /* fake loading bar duration */
+  PAYMENT_DANCE_MS: 5000,           /* shake/wiggle duration */
+  PAYMENT_SERENADE_MS: 3000,        /* mic noise duration */
+  PAYMENT_HIGHFIVE_WINDOW_MS: 3000, /* time to tap 5 times in rhythm */
+  PAYMENT_QUEUE_BASE_MS: 800,       /* base delay between queue numbers */
 };
