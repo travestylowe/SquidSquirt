@@ -1,0 +1,52 @@
+[
+  {
+    "question": "How many hearts does a squid have?",
+    "choices": ["1", "2", "3", "4"],
+    "answer": 2
+  },
+  {
+    "question": "What color is squid blood?",
+    "choices": ["Red", "Blue", "Green", "Clear"],
+    "answer": 1
+  },
+  {
+    "question": "What do squids use to propel themselves?",
+    "choices": ["Fins only", "Jet propulsion", "Legs", "Tail flapping"],
+    "answer": 1
+  },
+  {
+    "question": "What is a group of squid called?",
+    "choices": ["A school", "A squad", "A shoal", "A squad or shoal"],
+    "answer": 2
+  },
+  {
+    "question": "How many arms does a squid have?",
+    "choices": ["6", "8", "10", "12"],
+    "answer": 1
+  },
+  {
+    "question": "What is the largest squid species?",
+    "choices": ["Giant squid", "Colossal squid", "Humboldt squid", "Firefly squid"],
+    "answer": 1
+  },
+  {
+    "question": "What do squids squirt to escape predators?",
+    "choices": ["Water", "Ink", "Slime", "Bubbles"],
+    "answer": 1
+  },
+  {
+    "question": "Where is a squid's brain located?",
+    "choices": ["In its head", "Around its esophagus", "In its mantle", "It doesn't have one"],
+    "answer": 1
+  },
+  {
+    "question": "What shape is a squid's pupil?",
+    "choices": ["Round", "Slit (vertical)", "W-shaped", "Square"],
+    "answer": 2
+  },
+  {
+    "question": "Can squids change color?",
+    "choices": ["No", "Only some species", "Yes, all of them", "Only in the dark"],
+    "answer": 2
+  }
+]
