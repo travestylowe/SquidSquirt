@@ -101,18 +101,50 @@ async function loadTrivia() {
  * @param {object} refs - DOM refs (paymentModal, paymentClose, paymentTitle, paymentBody, paymentActions)
  * @returns {{ requestPayment(itemId): Promise<boolean> }}
  */
-export function createPaymentSystem(refs) {
+export function createPaymentSystem(refs, { triggerBlush } = {}) {
   let activeReject = null;
+  let previousFocus = null;
+
+  const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function trapFocus(e) {
+    const inner = refs.paymentModal.querySelector('.payment-modal-inner');
+    const focusable = [...inner.querySelectorAll(FOCUSABLE)];
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.key === 'Tab') {
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    if (e.key === 'Escape') {
+      hideModal();
+    }
+  }
 
   function showModal() {
+    previousFocus = document.activeElement;
     refs.paymentModal.hidden = false;
+    refs.paymentModal.addEventListener('keydown', trapFocus);
+    /* Focus the close button as a safe initial target */
+    requestAnimationFrame(() => refs.paymentClose.focus());
   }
 
   function hideModal() {
     refs.paymentModal.hidden = true;
+    refs.paymentModal.removeEventListener('keydown', trapFocus);
     refs.paymentTitle.textContent = '';
     refs.paymentBody.textContent = '';
     refs.paymentActions.innerHTML = '';
+    if (previousFocus) {
+      previousFocus.focus();
+      previousFocus = null;
+    }
     if (activeReject) {
       activeReject(false);
       activeReject = null;
@@ -138,7 +170,7 @@ export function createPaymentSystem(refs) {
 
     return new Promise((resolve) => {
       activeReject = resolve;
-      payment.run(refs, resolve);
+      payment.run(refs, resolve, { triggerBlush });
     });
   }
 
@@ -147,7 +179,7 @@ export function createPaymentSystem(refs) {
 
 /* ── Payment implementations ── */
 
-function runCompliment(refs, resolve) {
+function runCompliment(refs, resolve, { triggerBlush } = {}) {
   const input = document.createElement('input');
   input.type = 'text';
   input.placeholder = 'You have beautiful tentacles...';
@@ -159,6 +191,7 @@ function runCompliment(refs, resolve) {
   btn.addEventListener('click', () => {
     refs.paymentBody.textContent = 'The squid is blushing! \u{1F97A}';
     refs.paymentActions.innerHTML = '';
+    if (triggerBlush) triggerBlush();
     setTimeout(() => { refs.paymentModal.hidden = true; resolve(true); }, 1200);
   });
 
@@ -234,6 +267,14 @@ function runDance(refs, resolve) {
 function runPatience(refs, resolve) {
   const bar = makeProgressBar();
   refs.paymentActions.appendChild(bar.container);
+
+  const cancelHint = document.createElement('p');
+  cancelHint.style.fontSize = '0.78rem';
+  cancelHint.style.color = '#475569';
+  cancelHint.style.marginTop = '8px';
+  cancelHint.style.textAlign = 'center';
+  cancelHint.textContent = 'You can close this at any time \u2014 you won\u2019t lose anything.';
+  refs.paymentActions.appendChild(cancelHint);
 
   const total = GAME.PAYMENT_PATIENCE_MS;
   const start = Date.now();

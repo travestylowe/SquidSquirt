@@ -11,6 +11,8 @@ export function createHints(hintEl, taunts, thanks) {
   let tauntRotateTimer = null;
   let lastPunIndex = -1;
   let lastThankYouIndex = -1;
+  let ariaLiveTimer = null;
+  const ARIA_LIVE_DEBOUNCE_MS = 800; /* prevent screen reader flooding on rapid clicks */
 
   /** Returns the squid's current screen-centre position. */
   function squidPos() {
@@ -24,6 +26,7 @@ export function createHints(hintEl, taunts, thanks) {
   /**
    * Spawn a floating speech bubble near the squid that drifts upward and fades.
    * `extraClass` adds styling variants (e.g. 'bubble--taunt', 'bubble--thanks').
+   * Also pipes the text into the aria-live #hint region for screen readers.
    */
   function spawnBubble(text, extraClass) {
     const bubble = document.createElement('div');
@@ -38,6 +41,16 @@ export function createHints(hintEl, taunts, thanks) {
     bubble.style.top = `${pos.y - 60}px`;
 
     bubble.addEventListener('animationend', () => bubble.remove());
+
+    /* Announce to screen readers via the existing aria-live region.
+       Debounced so rapid clicks don't flood the announcement queue.
+       Milestone messages bypass debounce (set via priority flag). */
+    if (ariaLiveTimer) clearTimeout(ariaLiveTimer);
+    if (extraClass === 'bubble--milestone') {
+      hintEl.textContent = text;
+    } else {
+      ariaLiveTimer = setTimeout(() => { hintEl.textContent = text; }, ARIA_LIVE_DEBOUNCE_MS);
+    }
   }
 
   function clearTauntTimers() {
@@ -85,9 +98,10 @@ export function createHints(hintEl, taunts, thanks) {
     scheduleTauntAfterIdle();
   }
 
-  /* Hide the static hint after the first squirt */
+  /* Visually hide the static hint after the first squirt, but keep it in the
+     accessibility tree so the aria-live region continues to announce updates. */
   function hideStaticHint() {
-    hintEl.style.display = 'none';
+    hintEl.classList.add('visually-hidden');
   }
 
   return {

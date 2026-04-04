@@ -117,8 +117,9 @@ export function createUnlockPicker(refs, unlockManager, paymentSystem, buildHats
     appendSectionTitle(container, 'Emoji Packs');
     for (const item of unlockManager.getEmojiDefs()) {
       const isUnlocked = unlockManager.isUnlocked(item.id);
+      const hint = isUnlocked ? item.revealName : `${item.name} — ${easterEggHint(item.trigger)}`;
       appendOption(container, {
-        label: isUnlocked ? item.revealName : item.name,
+        label: hint,
         locked: !isUnlocked,
         selected: pins.ink === item.id,
         showBuy: false, /* No microtransactions for easter eggs */
@@ -171,6 +172,19 @@ export function createUnlockPicker(refs, unlockManager, paymentSystem, buildHats
         },
       });
     }
+  }
+
+  /* ── Easter egg trigger hints (vague, no spoilers) ── */
+
+  const EASTER_EGG_HINTS = {
+    'rapid-fire':       'Squirt rapidly\u2026',
+    'midnight':         'Visit at a special hour\u2026',
+    'session-marathon': 'Keep squirting in one session\u2026',
+    'idle-then-squirt': 'Leave the squid alone for a while\u2026',
+  };
+
+  function easterEggHint(trigger) {
+    return EASTER_EGG_HINTS[trigger] || 'Do something unexpected\u2026';
   }
 
   /* ── Helpers ── */

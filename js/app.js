@@ -72,7 +72,7 @@ async function main() {
   const accessories = createAccessorySystem(refs.squidBody, count);
 
   const unlockManager = createUnlockManager(count);
-  const paymentSystem = createPaymentSystem(refs);
+  const paymentSystem = createPaymentSystem(refs, { triggerBlush: squid.triggerBlush });
   const unlockPicker = createUnlockPicker(
     refs, unlockManager, paymentSystem, (container) => accessories.buildHatsContent(container)
   );
@@ -237,9 +237,66 @@ async function main() {
   }
 
   hints.scheduleTauntAfterIdle();
-  spawnAmbientBubbles();
 
-  refs.squidBtn.addEventListener('mousedown', doSquirt);
+  /* ── First-visit UX ── */
+  const isFirstVisit = !localStorage.getItem(GAME.FIRST_VISIT_KEY);
+
+  if (isFirstVisit) {
+    /* Delay ambient bubbles so "squeeze me" hint lands against a still background */
+    setTimeout(() => spawnAmbientBubbles(), GAME.FIRST_VISIT_BUBBLE_DELAY_MS);
+
+    /* Show one-time save-state tooltip near the counter */
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.fonts.ready.then(() => {
+      const tooltip = document.createElement('div');
+      tooltip.className = 'speech-bubble bubble--thanks';
+      tooltip.textContent = 'Your progress saves automatically!';
+      tooltip.style.position = 'fixed';
+      tooltip.style.left = '50%';
+      tooltip.style.top = `${refs.counter.getBoundingClientRect().bottom + 12}px`;
+      tooltip.style.animation = 'none';
+      tooltip.style.opacity = '1';
+      if (!prefersReducedMotion) {
+        tooltip.style.transition = 'opacity 0.6s';
+      }
+      document.body.appendChild(tooltip);
+
+      setTimeout(() => {
+        if (prefersReducedMotion) {
+          tooltip.remove();
+        } else {
+          tooltip.style.opacity = '0';
+          tooltip.addEventListener('transitionend', () => tooltip.remove());
+        }
+      }, GAME.SAVE_TOOLTIP_MS);
+    });
+
+    localStorage.setItem(GAME.FIRST_VISIT_KEY, '1');
+  } else {
+    spawnAmbientBubbles();
+  }
+
+  /* Guard prevents double-fire: mousedown already handles mouse users,
+     so the click listener only fires for keyboard (Enter/Space) and
+     iOS VoiceOver double-tap (which routes through click). */
+  let mouseDidFire = false;
+
+  refs.squidBtn.addEventListener('mousedown', () => {
+    mouseDidFire = true;
+    doSquirt();
+  });
+
+  refs.squidBtn.addEventListener('mouseleave', () => { mouseDidFire = false; });
+
+  refs.squidBtn.addEventListener('click', () => {
+    if (mouseDidFire) {
+      mouseDidFire = false;
+      return;
+    }
+    doSquirt();
+  });
+
   refs.squidBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     doSquirt();

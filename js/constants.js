@@ -104,11 +104,16 @@ export const GAME = {
   EASTER_EGG_SESSION_COUNT: 100,    /* squirts in one session for hearts */
 
   // Payment timing constants (ms)
-  PAYMENT_PATIENCE_MS: 30000,       /* fake loading bar duration */
+  PAYMENT_PATIENCE_MS: 10000,       /* fake loading bar duration */
   PAYMENT_DANCE_MS: 5000,           /* shake/wiggle duration */
   PAYMENT_SERENADE_MS: 3000,        /* mic noise duration */
   PAYMENT_HIGHFIVE_WINDOW_MS: 3000, /* time to tap 5 times in rhythm */
   PAYMENT_QUEUE_BASE_MS: 800,       /* base delay between queue numbers */
+
+  // First-visit UX
+  FIRST_VISIT_KEY: 'sqfv',           /* localStorage flag for first visit */
+  FIRST_VISIT_BUBBLE_DELAY_MS: 2500, /* ms to delay ambient bubbles on first visit */
+  SAVE_TOOLTIP_MS: 4000,             /* ms to show save-state tooltip */
 
   // Unlock bubble reveal
   BUBBLE_FLOAT_SPEED: 1.2,          /* px per frame upward drift */

@@ -179,6 +179,7 @@ body::before {
   padding: 0;
   display: block;
   filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.25));
+  border-radius: 50%;
   transform-origin: center center;
   transition:
     filter 0.3s,
@@ -187,6 +188,11 @@ body::before {
 
 #squid-btn:hover {
   filter: drop-shadow(0 4px 24px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 30px rgba(200, 120, 255, 0.4));
+}
+
+#squid-btn:focus-visible {
+  outline: 3px solid #a855f7;
+  outline-offset: 4px;
 }
 
 #squid-svg {
@@ -704,6 +710,12 @@ body::before {
   border-color: #7c3aed;
 }
 
+.payment-actions input[type="text"]:focus-visible,
+.payment-actions textarea:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}
+
 .payment-actions textarea {
   min-height: 60px;
   resize: vertical;
@@ -905,6 +917,17 @@ body::before {
   #global-counter {
     font-size: 2rem;
   }
+}
+
+/* ── Visually hidden (screen-reader only) ── */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
 }
 
 /* ── Reduced motion ── */
