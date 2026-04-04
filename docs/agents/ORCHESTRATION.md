@@ -6,8 +6,8 @@
 
 | Command | What It Does | Agents Used |
 |---------|-------------|-------------|
-| `/feature-dev` | Full feature lifecycle: explore -> design -> implement -> review -> docs | explorer, architect, developer, reviewer, test-runner, doc-syncer |
-| `/code-review` | Multi-agent PR review with confidence filtering | reviewer (x5) |
+| `/dev` | Full feature lifecycle: explore -> design -> implement -> review -> docs | explorer, architect, developer, reviewer, test-runner, doc-syncer |
+| `/review` | Multi-agent PR review with confidence filtering | reviewer (x5) |
 
 ## Phase Gates
 
