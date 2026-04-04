@@ -180,11 +180,10 @@ function availableHats(count) {
 }
 
 /**
- * Manages the hat overlay inside the squid SVG, the random rotation on
- * each surface, and the picker panel for pinning a favourite.
+ * Manages the hat overlay inside the squid SVG and the random rotation on
+ * each surface.  Panel building is delegated to the tabbed unlock picker.
  */
-export function createAccessorySystem(svgBodyEl, btnEl, panelEl, totalCount) {
-  /** 'random' or a specific hat id */
+export function createAccessorySystem(svgBodyEl, totalCount) {
   let pinned = localStorage.getItem(GAME.ACCESSORY_KEY) || 'random';
   let currentCount = totalCount;
   let lastRandomIdx = -1;
@@ -198,14 +197,11 @@ export function createAccessorySystem(svgBodyEl, btnEl, panelEl, totalCount) {
     svgBodyEl.appendChild(accGroup);
   }
 
-  /* ── rendering ── */
-
   function renderHat(hat) {
     accGroup.innerHTML = '';
     if (hat && hat.svg) accGroup.innerHTML = hat.svg;
   }
 
-  /** Pick a random hat from the unlocked set (avoids repeating). */
   function pickRandomHat() {
     const pool = availableHats(currentCount);
     if (pool.length === 0) return null;
@@ -216,7 +212,6 @@ export function createAccessorySystem(svgBodyEl, btnEl, panelEl, totalCount) {
     return pool[idx];
   }
 
-  /** Show the pinned hat, or a random one. */
   function applyHat() {
     if (pinned === 'random') {
       renderHat(pickRandomHat());
@@ -230,15 +225,11 @@ export function createAccessorySystem(svgBodyEl, btnEl, panelEl, totalCount) {
     }
   }
 
-  /* ── picker panel ── */
-
-  function buildPanel() {
-    panelEl.innerHTML = '';
-
-    const title = document.createElement('div');
-    title.className = 'panel-title';
-    title.textContent = 'Hats';
-    panelEl.appendChild(title);
+  /**
+   * Build hat options into an external container (called by unlock-picker).
+   */
+  function buildHatsContent(container) {
+    container.innerHTML = '';
 
     /* "Random" option */
     const randBtn = document.createElement('button');
@@ -249,9 +240,9 @@ export function createAccessorySystem(svgBodyEl, btnEl, panelEl, totalCount) {
       pinned = 'random';
       localStorage.setItem(GAME.ACCESSORY_KEY, pinned);
       applyHat();
-      buildPanel();
+      buildHatsContent(container);
     });
-    panelEl.appendChild(randBtn);
+    container.appendChild(randBtn);
 
     for (const hat of HATS) {
       if (!hat.svg) continue;
@@ -270,44 +261,18 @@ export function createAccessorySystem(svgBodyEl, btnEl, panelEl, totalCount) {
         pinned = hat.id;
         localStorage.setItem(GAME.ACCESSORY_KEY, pinned);
         applyHat();
-        buildPanel();
+        container.innerHTML = '';
+        buildHatsContent(container);
       });
-      panelEl.appendChild(btn);
+      container.appendChild(btn);
     }
   }
 
-  /* ── open / close ── */
-
-  let open = false;
-
-  function toggle() {
-    open = !open;
-    panelEl.classList.toggle('open', open);
-    btnEl.classList.toggle('active', open);
-    if (open) buildPanel();
-  }
-
-  function close() {
-    if (!open) return;
-    open = false;
-    panelEl.classList.remove('open');
-    btnEl.classList.remove('active');
-  }
-
-  btnEl.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
-  panelEl.addEventListener('click', (e) => e.stopPropagation());
-  document.addEventListener('click', close);
-
-  /* ── init ── */
   applyHat();
 
   return {
-    updateCount(n) {
-      currentCount = n;
-    },
-    /** Call when the squid surfaces to randomize the hat. */
-    onSurface() {
-      applyHat();
-    },
+    updateCount(n) { currentCount = n; },
+    onSurface() { applyHat(); },
+    buildHatsContent,
   };
 }
