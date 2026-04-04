@@ -21,11 +21,11 @@ export function getMilestone(count) {
 /**
  * Triple confetti burst + screen flash.
  */
-export function celebrateMilestone() {
+export function celebrateMilestone(confettiShape) {
   /* Three staggered confetti waves */
-  spawnSquidConfetti();
-  setTimeout(() => spawnSquidConfetti(), 300);
-  setTimeout(() => spawnSquidConfetti(), 600);
+  spawnSquidConfetti(confettiShape);
+  setTimeout(() => spawnSquidConfetti(confettiShape), 300);
+  setTimeout(() => spawnSquidConfetti(confettiShape), 600);
 
   /* Purple radial flash overlay */
   const flash = document.createElement('div');

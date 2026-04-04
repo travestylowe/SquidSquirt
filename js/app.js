@@ -15,6 +15,9 @@ import { getMilestone, celebrateMilestone } from './fx/milestone.js';
 import { createSoundToggle } from './ui/soundToggle.js';
 import { createShareButton } from './ui/shareButton.js';
 import { createAccessorySystem } from './ui/accessories.js';
+import { createUnlockManager } from './unlocks/unlock-manager.js';
+import { createUnlockPicker } from './ui/unlock-picker.js';
+import { createPaymentSystem } from './ui/payments.js';
 import { randomInt } from './util/random.js';
 import { debounce } from './util/debounce.js';
 
@@ -65,8 +68,12 @@ async function main() {
   let count = localCounter.load();
   createShareButton(refs.shareBtn, () => count);
 
-  const accessories = createAccessorySystem(
-    refs.squidBody, refs.accessoryBtn, refs.accessoryPanel, count
+  const accessories = createAccessorySystem(refs.squidBody, count);
+
+  const unlockManager = createUnlockManager(count);
+  const paymentSystem = createPaymentSystem(refs);
+  const unlockPicker = createUnlockPicker(
+    refs, unlockManager, paymentSystem, (container) => accessories.buildHatsContent(container)
   );
 
   /* ── Init display ── */
@@ -100,12 +107,12 @@ async function main() {
     /* Milestone check */
     const milestone = getMilestone(count);
     if (milestone) {
-      celebrateMilestone();
+      celebrateMilestone(unlockManager.pickConfettiShape());
       hints.showMilestoneMsg(milestone.msg);
     } else {
       squirtsUntilConfetti--;
       if (squirtsUntilConfetti <= 0) {
-        spawnSquidConfetti();
+        spawnSquidConfetti(unlockManager.pickConfettiShape());
         squirtsUntilConfetti = randomInt(GAME.CONFETTI_MIN_SQUIRTS, GAME.CONFETTI_MAX_SQUIRTS);
       }
       hints.showThankYouPun();
@@ -113,6 +120,18 @@ async function main() {
 
     /* Accessory unlock check */
     accessories.updateCount(count);
+
+    /* Unlock check */
+    const { milestoneUnlocks, easterEggUnlocks } = unlockManager.onSquirt(count);
+
+    /* Easter egg reveal animation */
+    for (const egg of easterEggUnlocks) {
+      const reveal = document.createElement('div');
+      reveal.className = 'easter-egg-reveal';
+      reveal.textContent = egg.emojis ? egg.emojis[0] : '\u{2753}';
+      document.body.appendChild(reveal);
+      reveal.addEventListener('animationend', () => reveal.remove());
+    }
 
     localCounter.save(count);
 
@@ -167,6 +186,30 @@ async function main() {
     const mouth = squid.getSiphonMouthRect();
     const inkX = mouth.left + mouth.width * 0.5;
     const inkY = mouth.top + mouth.height * 0.5;
+
+    /* Set ink render mode from unlock manager */
+    const particleStyle = unlockManager.pickParticleStyle();
+    if (particleStyle) {
+      switch (particleStyle.type) {
+        case 'ink':
+          ink.setRenderMode({
+            mode: 'ink',
+            hue: particleStyle.item.hue === null
+              ? () => Math.floor(Math.random() * 360)
+              : particleStyle.item.hue,
+          });
+          break;
+        case 'sprinkle':
+          ink.setRenderMode({ mode: 'sprinkle', huePool: particleStyle.item.hues });
+          break;
+        case 'emoji':
+          ink.setRenderMode({ mode: 'emoji', emojis: particleStyle.item.emojis });
+          break;
+      }
+    } else {
+      ink.setRenderMode(null);
+    }
+
     ink.spawnInk(inkX, inkY, power, squid.getInflation());
 
     if (power > GAME.BLUSH_SQUIRT_MIN || (isFart && power > GAME.BLUSH_FART_MIN)) {
