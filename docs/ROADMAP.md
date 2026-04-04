@@ -16,6 +16,7 @@
 - [x] **Ink color unlocks** — Ink particle/drip hue now matches the current squid palette instead of fixed purple. Each palette in `data/palettes.json` has an `inkHue` field; `ink.setInkHue()` updates it on palette change.
 - [x] **Squid customization (accessories)** — 6 SVG accessories (Party Hat, Crown, Bow Tie, Pirate Hat, Top Hat, Wizard Hat) unlocked at squirt milestones (50–5,000). Picker panel in `js/ui/accessories.js`. Auto-equips newly unlocked items. Selection persisted in `localStorage`.
 - [x] **Unlock system** — Unlockable ink colors (7 + rainbow), sprinkles (7 + rainbow), 4 secret emoji packs (easter eggs), 5 confetti shapes. Tabbed picker UI with pin/random selection. 10 silly microtransaction payment types as optional shortcuts. All unlocks earnable through play, milestones max at 1,000 squirts.
+- [x] **Unlock bubble reveal** — New unlocks float up from the squid in a translucent bubble with a preview inside. Player pops the bubble to see the item name. Multiple unlocks stagger horizontally. Bubbles settle and bob near the top until clicked.
 
 ## Decided Against
 
