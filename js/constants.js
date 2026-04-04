@@ -109,4 +109,13 @@ export const GAME = {
   PAYMENT_SERENADE_MS: 3000,        /* mic noise duration */
   PAYMENT_HIGHFIVE_WINDOW_MS: 3000, /* time to tap 5 times in rhythm */
   PAYMENT_QUEUE_BASE_MS: 800,       /* base delay between queue numbers */
+
+  // Unlock bubble reveal
+  BUBBLE_FLOAT_SPEED: 1.2,          /* px per frame upward drift */
+  BUBBLE_WOBBLE_AMP: 18,            /* px horizontal wobble amplitude */
+  BUBBLE_WOBBLE_FREQ: 0.02,         /* wobble frequency (radians/frame) */
+  BUBBLE_SIZE: 72,                  /* px diameter */
+  BUBBLE_SETTLE_Y: 80,              /* px from top where bubble settles */
+  BUBBLE_STAGGER_MS: 400,           /* ms delay between multiple bubbles */
+  BUBBLE_NAME_DURATION_MS: 1800,    /* ms to show item name after pop */
 };

@@ -918,4 +918,125 @@ body::before {
   .side-panel { transition-duration: 0.01s; }
   .easter-egg-reveal { animation-duration: 0.01s; }
   .payment-modal-inner { transition-duration: 0.01s; }
+  .unlock-bubble { animation: none !important; transition: none !important; }
+  .unlock-bubble.popping { animation: unlock-bubble-pop 0.01s forwards !important; }
+  .unlock-pop-particle { animation-duration: 0.01s !important; }
+  .unlock-bubble-name { animation-duration: 0.01s !important; }
+}
+
+/* ── Unlock reveal bubble ── */
+.unlock-bubble {
+  position: fixed;
+  z-index: 50;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.6), rgba(180,210,255,0.25) 50%, rgba(140,180,240,0.15) 80%, rgba(100,150,220,0.1));
+  box-shadow:
+    inset 0 -4px 8px rgba(100,150,220,0.15),
+    inset 0 2px 6px rgba(255,255,255,0.5),
+    0 2px 12px rgba(100,150,220,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  pointer-events: auto;
+  transition: box-shadow 0.15s;
+}
+
+.unlock-bubble::before {
+  content: '';
+  position: absolute;
+  top: 12%;
+  left: 22%;
+  width: 30%;
+  height: 20%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.unlock-bubble:hover {
+  box-shadow:
+    inset 0 -4px 8px rgba(100,150,220,0.2),
+    inset 0 2px 6px rgba(255,255,255,0.6),
+    0 4px 20px rgba(140,100,220,0.35);
+}
+
+.unlock-bubble:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 3px;
+}
+
+.unlock-bubble.settled {
+  animation: unlock-bubble-bob 3s ease-in-out infinite;
+}
+
+.unlock-bubble.popping {
+  animation: unlock-bubble-pop 0.35s ease-out forwards;
+  pointer-events: none;
+}
+
+.unlock-bubble-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.unlock-bubble-preview {
+  pointer-events: none;
+}
+
+/* Item name that appears after pop */
+.unlock-bubble-name {
+  position: fixed;
+  z-index: 51;
+  transform: translateX(-50%);
+  font-family: 'Boogaloo', cursive;
+  font-size: 1rem;
+  color: #581c87;
+  text-shadow: 0 1px 4px rgba(255,255,255,0.8);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: unlock-name-rise 1.8s ease-out forwards;
+}
+
+/* Pop burst particles */
+.unlock-pop-particle {
+  position: fixed;
+  z-index: 50;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180,210,255,0.7), rgba(140,180,240,0.3));
+  pointer-events: none;
+  animation: unlock-pop-burst 0.45s ease-out forwards;
+}
+
+@keyframes unlock-bubble-bob {
+  0%, 100% { filter: none; }
+  50% { filter: brightness(1.05); }
+}
+
+@keyframes unlock-bubble-pop {
+  0%   { transform: scale(1); opacity: 1; }
+  30%  { transform: scale(1.3); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes unlock-name-rise {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(0); }
+  15%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+@keyframes unlock-pop-burst {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
 }

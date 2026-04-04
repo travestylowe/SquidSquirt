@@ -18,6 +18,7 @@ import { createAccessorySystem } from './ui/accessories.js';
 import { createUnlockManager } from './unlocks/unlock-manager.js';
 import { createUnlockPicker } from './ui/unlock-picker.js';
 import { createPaymentSystem } from './ui/payments.js';
+import { spawnUnlockBubbles } from './fx/unlock-bubble.js';
 import { randomInt } from './util/random.js';
 import { debounce } from './util/debounce.js';
 
@@ -124,13 +125,13 @@ async function main() {
     /* Unlock check */
     const { milestoneUnlocks, easterEggUnlocks } = unlockManager.onSquirt(count);
 
-    /* Easter egg reveal animation */
-    for (const egg of easterEggUnlocks) {
-      const reveal = document.createElement('div');
-      reveal.className = 'easter-egg-reveal';
-      reveal.textContent = egg.emojis ? egg.emojis[0] : '\u{2753}';
-      document.body.appendChild(reveal);
-      reveal.addEventListener('animationend', () => reveal.remove());
+    /* Spawn reveal bubbles for new unlocks */
+    const allNewUnlocks = [...milestoneUnlocks, ...easterEggUnlocks];
+    if (allNewUnlocks.length > 0) {
+      const mouth = squid.getSiphonMouthRect();
+      const bubbleX = mouth.left + mouth.width * 0.5;
+      const bubbleY = mouth.top + mouth.height * 0.5;
+      spawnUnlockBubbles(allNewUnlocks, bubbleX, bubbleY);
     }
 
     localCounter.save(count);
