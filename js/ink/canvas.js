@@ -70,25 +70,40 @@ export function createInkSystem(canvasEl) {
       return;
     }
 
-    for (let i = 0; i < count; i++) {
+    /* Sprinkle mode: smaller, discrete, bright particles (no blur merge) */
+    const isSprinkle = renderMode && renderMode.mode === 'sprinkle';
+    const sprinkleCount = isSprinkle ? Math.min(Math.floor(count * 1.6), 500) : count;
+
+    for (let i = 0; i < sprinkleCount; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = (2.5 + Math.random() * 8) * Math.pow(power, 0.5)
-                  + inf * (4 + Math.random() * 12);
+      const speed = isSprinkle
+        ? (4 + Math.random() * 12) * Math.pow(power, 0.5) + inf * (5 + Math.random() * 10)
+        : (2.5 + Math.random() * 8) * Math.pow(power, 0.5) + inf * (4 + Math.random() * 12);
 
       const sizeBoost = 1 + inf * 5;
-      const r = (12 + Math.random() * 22) * Math.pow(power, 0.42) * sizeBoost;
+      const r = isSprinkle
+        ? (3 + Math.random() * 5) * Math.pow(power, 0.3) * sizeBoost
+        : (12 + Math.random() * 22) * Math.pow(power, 0.42) * sizeBoost;
 
-      /* Determine hue for this particle based on render mode */
-      let blobHue;
-      if (renderMode && renderMode.mode === 'sprinkle') {
+      /* Determine hue / sat / lt for this particle based on render mode */
+      let blobHue, blobSat, blobLt;
+      if (isSprinkle) {
         const pool = renderMode.huePool;
         blobHue = pool[Math.floor(Math.random() * pool.length)];
+        blobSat = 70 + Math.random() * 20;   /* bright, candy-like */
+        blobLt = 45 + Math.random() * 20;    /* high lightness — visible color */
       } else if (renderMode && renderMode.mode === 'ink' && typeof renderMode.hue === 'function') {
         blobHue = renderMode.hue();
+        blobSat = (renderMode.sat || 55) + Math.random() * 15;
+        blobLt = (renderMode.lt || 18) + Math.random() * 8;
       } else if (renderMode && renderMode.mode === 'ink') {
         blobHue = renderMode.hue;
+        blobSat = (renderMode.sat || 55) + Math.random() * 15;
+        blobLt = (renderMode.lt || 18) + Math.random() * 8;
       } else {
         blobHue = inkHue;
+        blobSat = 25 + Math.random() * 25;
+        blobLt = 1 + Math.random() * 6;
       }
 
       blobs.push({
@@ -97,11 +112,12 @@ export function createInkSystem(canvasEl) {
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         r,
-        maxR: r * (2.0 + Math.random() * 1.5),
+        maxR: isSprinkle ? r * (1.1 + Math.random() * 0.3) : r * (2.0 + Math.random() * 1.5),
         hue: blobHue - 8 + Math.random() * 20,
-        sat: 25 + Math.random() * 25,
-        lt: 1 + Math.random() * 6,
-        alpha: 0.6 + Math.random() * 0.3,
+        sat: blobSat,
+        lt: blobLt,
+        alpha: isSprinkle ? 0.85 + Math.random() * 0.15 : 0.6 + Math.random() * 0.3,
+        sprinkle: isSprinkle,
         alive: true,
       });
     }
@@ -115,16 +131,22 @@ export function createInkSystem(canvasEl) {
         const dist = Math.random() * megaSpread;
         const sr = (25 + Math.random() * 45) * (1 + inf * 2);
 
-        let stainHue;
+        let stainHue, stainSat, stainLt;
         if (renderMode && renderMode.mode === 'sprinkle') {
-          const pool = renderMode.huePool;
-          stainHue = pool[Math.floor(Math.random() * pool.length)];
+          /* Sprinkles don't produce mega stains — skip */
+          continue;
         } else if (renderMode && renderMode.mode === 'ink' && typeof renderMode.hue === 'function') {
           stainHue = renderMode.hue();
+          stainSat = (renderMode.sat || 55) + Math.random() * 12;
+          stainLt = (renderMode.lt || 18) + Math.random() * 6;
         } else if (renderMode && renderMode.mode === 'ink') {
           stainHue = renderMode.hue;
+          stainSat = (renderMode.sat || 55) + Math.random() * 12;
+          stainLt = (renderMode.lt || 18) + Math.random() * 6;
         } else {
           stainHue = inkHue;
+          stainSat = 25 + Math.random() * 20;
+          stainLt = 1 + Math.random() * 5;
         }
 
         stains.push({
@@ -133,8 +155,8 @@ export function createInkSystem(canvasEl) {
           r: sr,
           alpha: 0.4 + Math.random() * 0.3,
           hue: stainHue - 5 + Math.random() * 12,
-          sat: 25 + Math.random() * 20,
-          lt: 1 + Math.random() * 5,
+          sat: stainSat,
+          lt: stainLt,
         });
       }
     }
@@ -164,15 +186,20 @@ export function createInkSystem(canvasEl) {
 
       /* Pool into a stain once nearly stopped */
       if (spd < POOL_SPEED) {
-        if (stains.length < MAX_STAINS) {
-          stains.push({
-            x: b.x, y: b.y,
-            r: b.r,
-            alpha: b.alpha,
-            hue: b.hue, sat: b.sat, lt: b.lt,
-          });
+        /* Sprinkle particles fade out instead of pooling into stains */
+        if (b.sprinkle) {
+          b.alive = false;
+        } else {
+          if (stains.length < MAX_STAINS) {
+            stains.push({
+              x: b.x, y: b.y,
+              r: b.r,
+              alpha: b.alpha,
+              hue: b.hue, sat: b.sat, lt: b.lt,
+            });
+          }
+          b.alive = false;
         }
-        b.alive = false;
       }
     }
     blobs = blobs.filter(b => b.alive);
@@ -194,8 +221,9 @@ export function createInkSystem(canvasEl) {
       oCtx.fill();
     }
 
-    /* Active blobs on top */
+    /* Active blobs on top (non-sprinkle only — sprinkles drawn separately) */
     for (const b of blobs) {
+      if (b.sprinkle) continue;
       oCtx.globalAlpha = b.alpha;
       oCtx.fillStyle = `hsl(${b.hue},${b.sat}%,${b.lt}%)`;
       oCtx.beginPath();
@@ -215,6 +243,18 @@ export function createInkSystem(canvasEl) {
     /* Sharp pass at low opacity — adds core density + definition */
     ctx.globalAlpha = 0.25;
     ctx.drawImage(off, 0, 0);
+    ctx.globalAlpha = 1;
+
+    /* Sprinkle particles: drawn directly on visible canvas — no blur,
+       crisp bright dots that look like candy sprinkles, not ink clouds */
+    for (const b of blobs) {
+      if (!b.sprinkle) continue;
+      ctx.globalAlpha = b.alpha;
+      ctx.fillStyle = `hsl(${b.hue},${b.sat}%,${b.lt}%)`;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
     ctx.globalAlpha = 1;
   }
 
@@ -239,23 +279,39 @@ export function createInkSystem(canvasEl) {
     return total / (w * h);
   }
 
-  /** Lightweight scatter for emoji mode — no drips, stains, or blur. */
+  /**
+   * Lightweight scatter for emoji mode — no drips, stains, or blur.
+   * Each emoji pack has unique physics for a distinct feel.
+   */
   function spawnEmojiScatter(originX, originY, power, inflation, count) {
     const inf = inflation || 0;
     const emojis = renderMode.emojis;
+    const phys = renderMode.physics || {};
+
+    const gravity   = phys.gravity   ?? 0.15;
+    const drag      = phys.drag      ?? 0.96;
+    const fadeRate   = phys.fadeRate  ?? 0.012;
+    const sizeMin   = phys.sizeMin   ?? 16;
+    const sizeRange  = phys.sizeRange ?? 18;
+    const speedMul   = phys.speedMul ?? 1;
+    const doTwinkle  = phys.twinkle  || false;
+    const doSway     = phys.sway     || false;
+    const doSpin     = phys.spin     || false;
+
     /* Fewer particles than ink for a cleaner look */
     const emojiCount = Math.min(Math.floor(count * 0.35), 60);
     const maxSpread = Math.hypot(W, H) * 0.6;
     const spread = 120 + maxSpread * inf;
 
     const pieces = [];
+    let frame = 0;
 
     for (let i = 0; i < emojiCount; i++) {
       const glyph = emojis[Math.floor(Math.random() * emojis.length)];
       const angle = Math.random() * Math.PI * 2;
-      const speed = (3 + Math.random() * 7) * Math.pow(power, 0.5)
-                  + inf * (3 + Math.random() * 8);
-      const size = 16 + Math.random() * 18;
+      const speed = ((3 + Math.random() * 7) * Math.pow(power, 0.5)
+                  + inf * (3 + Math.random() * 8)) * speedMul;
+      const size = sizeMin + Math.random() * sizeRange;
 
       const el = document.createElement('div');
       el.className = 'emoji-particle';
@@ -272,29 +328,49 @@ export function createInkSystem(canvasEl) {
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         alpha: 1,
+        rot: 0,
+        spinRate: doSpin ? (Math.random() - 0.5) * 16 : 0,
+        swayPhase: Math.random() * Math.PI * 2,
         alive: true,
       });
     }
 
     function tick() {
+      frame++;
       let active = 0;
       for (const p of pieces) {
         if (!p.alive) continue;
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.15; /* light gravity */
-        p.vx *= 0.96;
-        p.vy *= 0.96;
-        p.alpha -= 0.012;
+        p.vy += gravity;
+        p.vx *= drag;
+        p.vy *= drag;
+        p.alpha -= fadeRate;
 
-        if (p.alpha <= 0 || p.y > H + 40 || p.x < -40 || p.x > W + 40) {
+        /* Sway: gentle horizontal sine wave (hearts) */
+        if (doSway) {
+          p.x += Math.sin(frame * 0.04 + p.swayPhase) * 1.2;
+        }
+
+        /* Spin: rotation (skulls) */
+        if (doSpin) {
+          p.rot += p.spinRate;
+        }
+
+        if (p.alpha <= 0 || p.y > H + 40 || p.y < -80 || p.x < -40 || p.x > W + 40) {
           p.alive = false;
           p.el.remove();
           continue;
         }
 
-        p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
-        p.el.style.opacity = p.alpha;
+        /* Twinkle: oscillate opacity (stars) */
+        const displayAlpha = doTwinkle
+          ? p.alpha * (0.55 + 0.45 * Math.sin(frame * 0.12 + p.swayPhase))
+          : p.alpha;
+
+        const rotStr = p.rot ? ` rotate(${p.rot}deg)` : '';
+        p.el.style.transform = `translate(${p.x}px, ${p.y}px)${rotStr}`;
+        p.el.style.opacity = displayAlpha;
         active++;
       }
       if (active > 0) requestAnimationFrame(tick);

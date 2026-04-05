@@ -198,13 +198,19 @@ async function main() {
             hue: particleStyle.item.hue === null
               ? () => Math.floor(Math.random() * 360)
               : particleStyle.item.hue,
+            sat: particleStyle.item.sat,
+            lt: particleStyle.item.lt,
           });
           break;
         case 'sprinkle':
           ink.setRenderMode({ mode: 'sprinkle', huePool: particleStyle.item.hues });
           break;
         case 'emoji':
-          ink.setRenderMode({ mode: 'emoji', emojis: particleStyle.item.emojis });
+          ink.setRenderMode({
+            mode: 'emoji',
+            emojis: particleStyle.item.emojis,
+            physics: particleStyle.item.physics,
+          });
           break;
       }
     } else {
