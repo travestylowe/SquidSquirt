@@ -6,6 +6,7 @@ import { GAME } from '../constants.js';
  */
 
 const INK_COLORS = [
+  { id: 'ink-black',   name: 'Black Ink',   hue: 0,    sat: 5,  lt: 6,  unlock: 0 },
   { id: 'ink-red',     name: 'Red Ink',     hue: 0,    sat: 75, lt: 35, unlock: GAME.INK_THRESHOLDS[0] },
   { id: 'ink-orange',  name: 'Orange Ink',  hue: 30,   sat: 80, lt: 38, unlock: GAME.INK_THRESHOLDS[1] },
   { id: 'ink-yellow',  name: 'Yellow Ink',  hue: 55,   sat: 85, lt: 45, unlock: GAME.INK_THRESHOLDS[2] },
