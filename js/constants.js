@@ -95,7 +95,7 @@ export const GAME = {
   SPRINKLE_THRESHOLDS: [20, 50, 80, 125, 225, 400, 650, 1000],
 
   // Confetti shape unlock thresholds (squirt count)
-  CONFETTI_THRESHOLDS: [40, 90, 150, 350, 750],
+  CONFETTI_THRESHOLDS: [40, 90, 150, 350, 500, 750],
 
   // Easter egg detection
   EASTER_EGG_RAPID_COUNT: 10,       /* squirts needed in window */

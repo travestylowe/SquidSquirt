@@ -60,9 +60,25 @@ const CONFETTI_SHAPES = [
     },
   },
   {
+    id: 'conf-bow',
+    name: 'Bow & Arrow',
+    unlock: GAME.CONFETTI_THRESHOLDS[4],
+    svg(hue) {
+      const h = Math.round(hue);
+      return `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="28" height="28" aria-hidden="true">
+        <path d="M8 4 Q2 16 8 28" fill="none" stroke="hsl(${h},65%,45%)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="8" y1="4" x2="8" y2="28" stroke="hsl(${h},55%,38%)" stroke-width="1.5"/>
+        <line x1="8" y1="16" x2="30" y2="6" stroke="hsl(${h},60%,42%)" stroke-width="2" stroke-linecap="round"/>
+        <polygon points="30,6 24,5 26,10" fill="hsl(${h},70%,50%)"/>
+        <line x1="10" y1="15" x2="13" y2="17" stroke="hsl(${h},50%,38%)" stroke-width="1"/>
+        <line x1="10" y1="17" x2="13" y2="15" stroke="hsl(${h},50%,38%)" stroke-width="1"/>
+      </svg>`;
+    },
+  },
+  {
     id: 'conf-tentacles',
     name: 'Tentacles',
-    unlock: GAME.CONFETTI_THRESHOLDS[4],
+    unlock: GAME.CONFETTI_THRESHOLDS[5],
     svg(hue) {
       const h = Math.round(hue);
       return `<svg viewBox="0 0 32 36" xmlns="http://www.w3.org/2000/svg" width="28" height="32" aria-hidden="true">
