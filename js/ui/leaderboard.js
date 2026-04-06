@@ -67,13 +67,12 @@ export function createLeaderboard(refs) {
   /* ── Panel open / close (bind FIRST so they always work) ── */
 
   function show() {
-    refs.leaderboardPanel.hidden = false;
+    refs.leaderboardPanel.classList.add('open');
     refresh(lastSyncCount);
-    requestAnimationFrame(() => refs.leaderboardNameInput.focus());
   }
 
   function hide() {
-    refs.leaderboardPanel.hidden = true;
+    refs.leaderboardPanel.classList.remove('open');
   }
 
   refs.leaderboardBtn.addEventListener('click', show);
@@ -94,7 +93,10 @@ export function createLeaderboard(refs) {
 
   async function saveName() {
     const val = refs.leaderboardNameInput.value.trim();
-    if (val.length === 0 || val === getDisplayName()) return;
+    if (val.length === 0 || val === getDisplayName()) {
+      hide();
+      return;
+    }
 
     refs.leaderboardNameSave.disabled = true;
     refs.leaderboardNameSave.textContent = '...';
@@ -111,6 +113,7 @@ export function createLeaderboard(refs) {
       } else {
         setDisplayName(val);
         refs.leaderboardRank.textContent = `Your rank: #${rank}`;
+        hide();
       }
     } catch (err) {
       console.warn('name change failed:', err.message);

@@ -152,6 +152,13 @@
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
     </button>
+    <button id="leaderboard-btn" aria-label="Leaderboard" title="Leaderboard" hidden>
+      <svg class="ctrl-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M10 1C10 1 13 5 15 5C17 5 18 3 18 3V8C18 8 17 10 15 10C13 10 10 6 10 6C10 6 7 10 5 10C3 10 2 8 2 8V3C2 3 3 5 5 5C7 5 10 1 10 1Z" fill="currentColor"/>
+        <rect x="8" y="10" width="4" height="4" rx="0.5" fill="currentColor"/>
+        <rect x="5" y="14" width="10" height="2" rx="1" fill="currentColor"/>
+      </svg>
+    </button>
   </div>
 
   <!-- Unlock picker panel (tabbed: Hats / Ink / Confetti) -->
@@ -195,17 +202,9 @@
     </div>
   </div>
 
-  <button id="leaderboard-btn" class="floating-leaderboard-btn" aria-label="Leaderboard" title="Leaderboard" hidden>
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 15l-2 5h4l-2-5z"/>
-      <path d="M6 9h12l-1.5-5h-9L6 9z"/>
-      <path d="M6 9c0 3.3 2.7 6 6 6s6-2.7 6-6"/>
-    </svg>
-  </button>
-
   <div id="leaderboard-panel" class="leaderboard-panel" hidden>
     <div class="leaderboard-inner">
-      <button id="leaderboard-close" class="leaderboard-close-btn" aria-label="Close">&times;</button>
+      <button id="leaderboard-close" class="payment-close" aria-label="Close">&times;</button>
       <h2 class="leaderboard-title">Leaderboard</h2>
       <div id="leaderboard-name-row" class="leaderboard-name-row">
         <label for="leaderboard-name-input" class="feedback-label">Your name</label>
