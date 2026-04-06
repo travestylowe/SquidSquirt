@@ -21,8 +21,8 @@ const GRAVITY_MIN = 0.12;
 const GRAVITY_RANGE = 0.18;
 
 /** Initial launch speed range (px/frame). */
-const SPEED_MIN = 9;
-const SPEED_RANGE = 13;
+const SPEED_MIN = 6;
+const SPEED_RANGE = 10;
 
 /**
  * Pick a random point along the viewport edge and return the inward-facing
@@ -67,10 +67,12 @@ export function spawnSquidConfetti(shape) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  /* Two origins: left side and right side, random vertical position */
+  /* Two origins: left and right edges, spread vertically across middle third */
+  const leftY = vh * 0.25 + Math.random() * vh * 0.5;
+  const rightY = vh * 0.25 + Math.random() * vh * 0.5;
   const origins = [
-    { x: -8, y: Math.random() * vh * 0.6 + vh * 0.1, angle: 0 },           /* left → spray right */
-    { x: vw + 8, y: Math.random() * vh * 0.6 + vh * 0.1, angle: Math.PI },  /* right → spray left */
+    { x: 0, y: leftY, angle: 0 },          /* left edge → spray right */
+    { x: vw, y: rightY, angle: Math.PI },   /* right edge → spray left */
   ];
 
   const pieces = [];
