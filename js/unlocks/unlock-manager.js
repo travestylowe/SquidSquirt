@@ -101,8 +101,12 @@ export function createUnlockManager(initialCount) {
           break;
 
         case 'midnight': {
+          /* Trigger within 30s of midnight PST (UTC-8) */
           const now = new Date();
-          triggered = now.getHours() === 0 && now.getMinutes() === 0;
+          const pstMs = now.getTime() + (now.getTimezoneOffset() * 60000) - (8 * 3600000);
+          const pstDate = new Date(pstMs);
+          const secsIntoPstDay = pstDate.getHours() * 3600 + pstDate.getMinutes() * 60 + pstDate.getSeconds();
+          triggered = secsIntoPstDay <= 30 || secsIntoPstDay >= 86370; /* 30s each side */
           break;
         }
 
@@ -208,18 +212,19 @@ export function createUnlockManager(initialCount) {
    * @returns {{ milestoneUnlocks: Array, easterEggUnlocks: Array }}
    */
   function onSquirt(count) {
-    /* Easter egg state updates (must happen BEFORE checks) */
     const now = Date.now();
 
-    /* idle-then-squirt check must use lastSquirtTime from BEFORE this squirt */
-    const easterEggUnlocks = checkEasterEggs();
-
-    /* Now update timestamps for future checks */
+    /* Push current squirt BEFORE checks so rapid-fire sees the 10th squirt */
     recentSquirts.push(now);
     if (recentSquirts.length > GAME.EASTER_EGG_RAPID_COUNT + 5) {
       recentSquirts.splice(0, recentSquirts.length - GAME.EASTER_EGG_RAPID_COUNT - 5);
     }
     sessionSquirts++;
+
+    /* idle-then-squirt uses lastSquirtTime from BEFORE this squirt (still set to previous) */
+    const easterEggUnlocks = checkEasterEggs();
+
+    /* Now update lastSquirtTime for future idle checks */
     lastSquirtTime = now;
 
     /* Milestone-based unlocks */
