@@ -4,6 +4,7 @@
 import { GAME } from './constants.js';
 import { getDomRefs } from './dom/refs.js';
 import { createLocalCounter } from './counter/local.js';
+import { initSupabase } from './counter/supabaseClient.js';
 import { createGlobalCounterBackend, parseSupabaseNumber } from './counter/globalSupabase.js';
 import { createInkSystem } from './ink/canvas.js';
 import { createSquirtAudio } from './audio/squirtAudio.js';
@@ -36,6 +37,7 @@ function paletteIdx(count, nPalettes) {
 
 async function main() {
   const cfg = window.SQUIDSQUIRT_CONFIG || {};
+  initSupabase(cfg);
   const debug = Boolean(cfg.debug);
 
   let taunts;

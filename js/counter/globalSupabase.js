@@ -1,7 +1,4 @@
-/**
- * Supabase REST + RPC for shared global squirt total.
- * Table/counter id/RPC names are centralized (not scattered in fetch strings).
- */
+import { isSupabaseConfigured, supabaseGet, supabaseRpc } from './supabaseClient.js';
 
 const DEFAULT_COUNTER_ID = 1;
 
@@ -13,18 +10,8 @@ export function parseSupabaseNumber(value) {
   return NaN;
 }
 
-function headers(key) {
-  return {
-    apikey: key,
-    Authorization: `Bearer ${key}`,
-    'Content-Type': 'application/json',
-  };
-}
-
 export function createGlobalCounterBackend(cfg) {
-  const url = String(cfg.supabaseUrl || '').trim();
-  const key = String(cfg.supabaseAnonKey || '').trim();
-  if (!url || !key) return null;
+  if (!isSupabaseConfigured()) return null;
 
   const counterId = cfg.counterRowId ?? DEFAULT_COUNTER_ID;
   const table = cfg.countersTable ?? 'counters';
@@ -32,22 +19,12 @@ export function createGlobalCounterBackend(cfg) {
 
   return {
     async fetchGlobalTotal() {
-      const res = await fetch(
-        `${url}/rest/v1/${table}?id=eq.${counterId}&select=total`,
-        { headers: { apikey: key, Authorization: `Bearer ${key}` } }
-      );
-      const data = await res.json();
+      const data = await supabaseGet(table, `id=eq.${counterId}&select=total`);
       return data[0]?.total ?? 0;
     },
 
     async incrementGlobal() {
-      const res = await fetch(`${url}/rest/v1/rpc/${rpcName}`, {
-        method: 'POST',
-        headers: headers(key),
-        body: JSON.stringify({}),
-      });
-      if (!res.ok) throw new Error('increment failed');
-      return res.json();
+      return supabaseRpc(rpcName);
     },
   };
 }
