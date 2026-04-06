@@ -46,5 +46,12 @@ export function getDomRefs() {
     feedbackType: document.getElementById('feedback-type'),
     feedbackText: document.getElementById('feedback-text'),
     feedbackSubmit: document.getElementById('feedback-submit'),
+    /* Leaderboard */
+    leaderboardBtn: document.getElementById('leaderboard-btn'),
+    leaderboardPanel: document.getElementById('leaderboard-panel'),
+    leaderboardClose: document.getElementById('leaderboard-close'),
+    leaderboardNameInput: document.getElementById('leaderboard-name-input'),
+    leaderboardList: document.getElementById('leaderboard-list'),
+    leaderboardRank: document.getElementById('leaderboard-rank'),
   };
 }

@@ -20,6 +20,7 @@ import { createUnlockManager } from './unlocks/unlock-manager.js';
 import { createUnlockPicker } from './ui/unlock-picker.js';
 import { createPaymentSystem } from './ui/payments.js';
 import { createFeedbackSystem } from './ui/feedback.js';
+import { createLeaderboard } from './ui/leaderboard.js';
 import { spawnUnlockBubbles } from './fx/unlock-bubble.js';
 import { randomInt } from './util/random.js';
 import { debounce } from './util/debounce.js';
@@ -80,6 +81,7 @@ async function main() {
     refs, unlockManager, paymentSystem, (container) => accessories.buildHatsContent(container)
   );
   createFeedbackSystem(refs);
+  const leaderboard = createLeaderboard(refs);
 
   /* ── Init display ── */
   refs.counter.textContent = count.toLocaleString();
@@ -139,6 +141,7 @@ async function main() {
     }
 
     localCounter.save(count);
+    leaderboard.sync(count);
 
     if (globalBackend) {
       globalBackend.incrementGlobal().then((raw) => {

@@ -195,6 +195,27 @@
     </div>
   </div>
 
+  <button id="leaderboard-btn" class="floating-leaderboard-btn" aria-label="Leaderboard" title="Leaderboard" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 15l-2 5h4l-2-5z"/>
+      <path d="M6 9h12l-1.5-5h-9L6 9z"/>
+      <path d="M6 9c0 3.3 2.7 6 6 6s6-2.7 6-6"/>
+    </svg>
+  </button>
+
+  <div id="leaderboard-panel" class="leaderboard-panel" hidden>
+    <div class="leaderboard-inner">
+      <button id="leaderboard-close" class="payment-close" aria-label="Close">&times;</button>
+      <h2 class="leaderboard-title">Leaderboard</h2>
+      <div id="leaderboard-name-row" class="leaderboard-name-row">
+        <label for="leaderboard-name-input" class="feedback-label">Your name</label>
+        <input id="leaderboard-name-input" type="text" maxlength="20" placeholder="Anonymous Squid" class="feedback-textarea" style="resize:none;height:auto;padding:6px 10px"/>
+      </div>
+      <div id="leaderboard-list" class="leaderboard-list"></div>
+      <div id="leaderboard-rank" class="leaderboard-rank"></div>
+    </div>
+  </div>
+
   <footer id="global-bar" aria-label="Global squirt total">
     <span id="global-counter-label">global squirts</span>
     <span id="global-counter">—</span>

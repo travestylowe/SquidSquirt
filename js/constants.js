@@ -116,6 +116,11 @@ export const GAME = {
   FIRST_VISIT_BUBBLE_DELAY_MS: 2500, /* ms to delay ambient bubbles on first visit */
   SAVE_TOOLTIP_MS: 4000,             /* ms to show save-state tooltip */
 
+  /* Leaderboard */
+  PLAYER_ID_KEY: 'sqpid',         /* anonymous player UUID */
+  DISPLAY_NAME_KEY: 'sq_display_name', /* optional nickname */
+  LEADERBOARD_SYNC_INTERVAL: 30,  /* squirts between leaderboard syncs */
+
   // Unlock bubble reveal
   BUBBLE_FLOAT_SPEED: 1.2,          /* px per frame upward drift */
   BUBBLE_WOBBLE_AMP: 18,            /* px horizontal wobble amplitude */
