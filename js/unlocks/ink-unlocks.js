@@ -6,14 +6,14 @@ import { GAME } from '../constants.js';
  */
 
 const INK_COLORS = [
-  { id: 'ink-red',     name: 'Red Ink',     hue: 0,    sat: 55, lt: 18, unlock: GAME.INK_THRESHOLDS[0] },
-  { id: 'ink-orange',  name: 'Orange Ink',  hue: 30,   sat: 60, lt: 22, unlock: GAME.INK_THRESHOLDS[1] },
-  { id: 'ink-yellow',  name: 'Yellow Ink',  hue: 55,   sat: 65, lt: 28, unlock: GAME.INK_THRESHOLDS[2] },
-  { id: 'ink-green',   name: 'Green Ink',   hue: 130,  sat: 50, lt: 16, unlock: GAME.INK_THRESHOLDS[3] },
-  { id: 'ink-blue',    name: 'Blue Ink',    hue: 210,  sat: 55, lt: 18, unlock: GAME.INK_THRESHOLDS[4] },
-  { id: 'ink-indigo',  name: 'Indigo Ink',  hue: 260,  sat: 50, lt: 14, unlock: GAME.INK_THRESHOLDS[5] },
-  { id: 'ink-violet',  name: 'Violet Ink',  hue: 290,  sat: 55, lt: 16, unlock: GAME.INK_THRESHOLDS[6] },
-  { id: 'ink-rainbow', name: 'Rainbow Ink', hue: null,  sat: 60, lt: 22, unlock: GAME.INK_THRESHOLDS[7] },
+  { id: 'ink-red',     name: 'Red Ink',     hue: 0,    sat: 75, lt: 35, unlock: GAME.INK_THRESHOLDS[0] },
+  { id: 'ink-orange',  name: 'Orange Ink',  hue: 30,   sat: 80, lt: 38, unlock: GAME.INK_THRESHOLDS[1] },
+  { id: 'ink-yellow',  name: 'Yellow Ink',  hue: 55,   sat: 85, lt: 45, unlock: GAME.INK_THRESHOLDS[2] },
+  { id: 'ink-green',   name: 'Green Ink',   hue: 130,  sat: 70, lt: 32, unlock: GAME.INK_THRESHOLDS[3] },
+  { id: 'ink-blue',    name: 'Blue Ink',    hue: 210,  sat: 75, lt: 35, unlock: GAME.INK_THRESHOLDS[4] },
+  { id: 'ink-indigo',  name: 'Indigo Ink',  hue: 260,  sat: 70, lt: 30, unlock: GAME.INK_THRESHOLDS[5] },
+  { id: 'ink-violet',  name: 'Violet Ink',  hue: 290,  sat: 75, lt: 33, unlock: GAME.INK_THRESHOLDS[6] },
+  { id: 'ink-rainbow', name: 'Rainbow Ink', hue: null,  sat: 80, lt: 38, unlock: GAME.INK_THRESHOLDS[7] },
 ];
 
 export function getInkUnlocks() {
