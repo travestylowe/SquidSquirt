@@ -64,7 +64,32 @@ export function createLeaderboard(refs) {
   let squirtsSinceSync = 0;
   let lastSyncCount = 0;
 
-  /* Populate name input */
+  /* ── Panel open / close (bind FIRST so they always work) ── */
+
+  function show() {
+    refs.leaderboardPanel.hidden = false;
+    refresh(lastSyncCount);
+    requestAnimationFrame(() => refs.leaderboardNameInput.focus());
+  }
+
+  function hide() {
+    refs.leaderboardPanel.hidden = true;
+  }
+
+  refs.leaderboardBtn.addEventListener('click', show);
+  refs.leaderboardClose.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hide();
+  });
+  refs.leaderboardPanel.addEventListener('click', (e) => {
+    if (e.target === refs.leaderboardPanel) hide();
+  });
+  refs.leaderboardPanel.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hide();
+  });
+
+  /* ── Name input ── */
+
   refs.leaderboardNameInput.value = getDisplayName();
 
   async function saveName() {
@@ -99,26 +124,6 @@ export function createLeaderboard(refs) {
   refs.leaderboardNameSave.addEventListener('click', saveName);
   refs.leaderboardNameInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') saveName();
-  });
-
-  /* Toggle panel */
-  function show() {
-    refs.leaderboardPanel.hidden = false;
-    refresh(lastSyncCount);
-    requestAnimationFrame(() => refs.leaderboardNameInput.focus());
-  }
-
-  function hide() {
-    refs.leaderboardPanel.hidden = true;
-  }
-
-  refs.leaderboardBtn.addEventListener('click', show);
-  refs.leaderboardClose.addEventListener('click', hide);
-  refs.leaderboardPanel.addEventListener('click', (e) => {
-    if (e.target === refs.leaderboardPanel) hide();
-  });
-  refs.leaderboardPanel.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') hide();
   });
 
   async function refresh(count) {
