@@ -147,6 +147,11 @@
         <path d="M10 1l2.5 5.5L18 7.5l-4 4.5 1 6L10 15l-5 3 1-6-4-4.5 5.5-1z" fill="currentColor"/>
       </svg>
     </button>
+    <button id="feedback-btn" aria-label="Send feedback" title="Feedback">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
   </div>
 
   <!-- Unlock picker panel (tabbed: Hats / Ink / Confetti) -->
@@ -166,6 +171,27 @@
       <div id="payment-title" class="payment-title"></div>
       <div id="payment-body" class="payment-body"></div>
       <div id="payment-actions" class="payment-actions"></div>
+    </div>
+  </div>
+
+  <!-- Feedback modal overlay -->
+  <div id="feedback-modal" class="payment-modal" aria-modal="true" role="dialog" hidden>
+    <div class="payment-modal-inner">
+      <button id="feedback-close" class="payment-close" aria-label="Close">&times;</button>
+      <div class="payment-title">Send Feedback</div>
+      <div id="feedback-body" class="payment-body">
+        <label for="feedback-type" class="feedback-label">What kind of feedback?</label>
+        <select id="feedback-type" class="feedback-select">
+          <option value="bug">Bug Report</option>
+          <option value="feature">Feature Request</option>
+          <option value="hello">Just Saying Hi</option>
+        </select>
+        <label for="feedback-text" class="feedback-label">Your message</label>
+        <textarea id="feedback-text" class="feedback-textarea" placeholder="Tell the squid what's on your mind..." maxlength="280" rows="3"></textarea>
+      </div>
+      <div id="feedback-actions" class="payment-actions">
+        <button id="feedback-submit" class="payment-submit-btn" disabled>Send</button>
+      </div>
     </div>
   </div>
 

@@ -19,6 +19,7 @@ import { createAccessorySystem } from './ui/accessories.js';
 import { createUnlockManager } from './unlocks/unlock-manager.js';
 import { createUnlockPicker } from './ui/unlock-picker.js';
 import { createPaymentSystem } from './ui/payments.js';
+import { createFeedbackSystem } from './ui/feedback.js';
 import { spawnUnlockBubbles } from './fx/unlock-bubble.js';
 import { randomInt } from './util/random.js';
 import { debounce } from './util/debounce.js';
@@ -78,6 +79,7 @@ async function main() {
   const unlockPicker = createUnlockPicker(
     refs, unlockManager, paymentSystem, (container) => accessories.buildHatsContent(container)
   );
+  createFeedbackSystem(refs);
 
   /* ── Init display ── */
   refs.counter.textContent = count.toLocaleString();

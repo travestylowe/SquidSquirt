@@ -39,5 +39,12 @@ export function getDomRefs() {
     paymentTitle: document.getElementById('payment-title'),
     paymentBody: document.getElementById('payment-body'),
     paymentActions: document.getElementById('payment-actions'),
+    /* Feedback modal */
+    feedbackBtn: document.getElementById('feedback-btn'),
+    feedbackModal: document.getElementById('feedback-modal'),
+    feedbackClose: document.getElementById('feedback-close'),
+    feedbackType: document.getElementById('feedback-type'),
+    feedbackText: document.getElementById('feedback-text'),
+    feedbackSubmit: document.getElementById('feedback-submit'),
   };
 }
