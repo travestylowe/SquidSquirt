@@ -919,6 +919,54 @@ body::before {
   }
 }
 
+/* ── Landscape immersive ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  #counter-section {
+    position: fixed;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    background: rgba(10, 10, 26, 0.6);
+    backdrop-filter: blur(6px);
+    padding: 4px 16px;
+    border-radius: 12px;
+  }
+  #counter-label { font-size: 0.6rem; }
+  #counter { font-size: 1.4rem; }
+
+  #global-bar { display: none; }
+
+  #controls {
+    position: fixed;
+    bottom: 8px;
+    right: 8px;
+    flex-direction: row;
+    gap: 6px;
+    z-index: 20;
+  }
+  #controls button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+
+  #squid-wrap {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #hint {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 /* ── Visually hidden (screen-reader only) ── */
 .visually-hidden {
   position: absolute !important;
@@ -928,6 +976,15 @@ body::before {
   clip: rect(0 0 0 0) !important;
   clip-path: inset(50%) !important;
   white-space: nowrap !important;
+}
+
+/* Wizard hat glow pulse */
+.wizard-glow {
+  animation: wizard-pulse 3s ease-in-out infinite;
+}
+@keyframes wizard-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
 }
 
 /* ── Reduced motion ── */
@@ -945,6 +1002,7 @@ body::before {
   .unlock-bubble.popping { animation: unlock-bubble-pop 0.01s forwards !important; }
   .unlock-pop-particle { animation-duration: 0.01s !important; }
   .unlock-bubble-name { animation-duration: 0.01s !important; }
+  .wizard-glow { animation: none; opacity: 0.25; }
 }
 
 /* ── Unlock reveal bubble ── */
