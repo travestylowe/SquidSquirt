@@ -10,7 +10,7 @@ import { isSupabaseConfigured, supabaseInsert } from '../counter/supabaseClient.
 /** Save a text submission to Supabase (fire-and-forget). */
 function saveSubmission(type, content) {
   if (!isSupabaseConfigured()) return;
-  const playerName = localStorage.getItem('sq_display_name') || null;
+  const playerName = localStorage.getItem(GAME.DISPLAY_NAME_KEY) || null;
   supabaseInsert('submissions', { type, content, player_name: playerName })
     .catch(err => { console.warn('submission save failed:', err.message); });
 }
