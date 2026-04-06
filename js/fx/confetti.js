@@ -56,53 +56,60 @@ function pickEdgeOrigin(vw, vh) {
 }
 
 /**
- * Spawn a burst of confetti from a single random edge point.
- * If a shape object is provided (from confetti-unlocks), use its SVG generator.
- * Otherwise, fall back to the default mini-squid.
+ * Spawn confetti from both left and right sides simultaneously.
+ * Each side fires 3x the base particle count for a big celebration.
  *
  * @param {object|null} shape - confetti shape from confetti-unlocks, or null for default
  */
 export function spawnSquidConfetti(shape) {
-  const n = randomInt(GAME.CONFETTI_PIECES_MIN, GAME.CONFETTI_PIECES_MAX);
+  const baseN = randomInt(GAME.CONFETTI_PIECES_MIN, GAME.CONFETTI_PIECES_MAX);
+  const perSide = baseN * 3;
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  const origin = pickEdgeOrigin(vw, vh);
+  /* Two origins: left side and right side, random vertical position */
+  const origins = [
+    { x: -8, y: Math.random() * vh * 0.6 + vh * 0.1, angle: 0 },           /* left → spray right */
+    { x: vw + 8, y: Math.random() * vh * 0.6 + vh * 0.1, angle: Math.PI },  /* right → spray left */
+  ];
+
   const pieces = [];
 
-  for (let i = 0; i < n; i++) {
-    const el = document.createElement('div');
-    el.className = 'squid-confetti-piece';
+  for (const origin of origins) {
+    for (let i = 0; i < perSide; i++) {
+      const el = document.createElement('div');
+      el.className = 'squid-confetti-piece';
 
-    const hue = 250 + Math.random() * 80;
-    el.innerHTML = shape ? shape.svg(hue) : miniSquidSvg(hue);
+      const hue = 250 + Math.random() * 80;
+      el.innerHTML = shape ? shape.svg(hue) : miniSquidSvg(hue);
 
-    if (!shape) {
-      const w = 26 + Math.floor(Math.random() * 14);
-      const svg = el.firstElementChild;
-      if (svg) {
-        svg.setAttribute('width', String(w));
-        svg.setAttribute('height', String(Math.round(w * 35 / 32)));
+      if (!shape) {
+        const w = 26 + Math.floor(Math.random() * 14);
+        const svg = el.firstElementChild;
+        if (svg) {
+          svg.setAttribute('width', String(w));
+          svg.setAttribute('height', String(Math.round(w * 35 / 32)));
+        }
       }
+
+      document.body.appendChild(el);
+
+      const angle = origin.angle + (Math.random() - 0.5) * 2 * CONE_HALF;
+      const speed = SPEED_MIN + Math.random() * SPEED_RANGE;
+
+      pieces.push({
+        el,
+        x: origin.x,
+        y: origin.y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        gravity: GRAVITY_MIN + Math.random() * GRAVITY_RANGE,
+        rot: Math.random() * 360,
+        spin: (Math.random() - 0.5) * 14,
+        delay: Math.floor(Math.random() * 8),
+        alive: true,
+      });
     }
-
-    document.body.appendChild(el);
-
-    const angle = origin.angle + (Math.random() - 0.5) * 2 * CONE_HALF;
-    const speed = SPEED_MIN + Math.random() * SPEED_RANGE;
-
-    pieces.push({
-      el,
-      x: origin.x,
-      y: origin.y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      gravity: GRAVITY_MIN + Math.random() * GRAVITY_RANGE,
-      rot: Math.random() * 360,
-      spin: (Math.random() - 0.5) * 14,
-      delay: Math.floor(Math.random() * 8),
-      alive: true,
-    });
   }
 
   function tick() {
