@@ -89,9 +89,9 @@ export function createInkSystem(canvasEl) {
       let blobHue, blobSat, blobLt;
       if (isSprinkle) {
         const pool = renderMode.huePool;
-        blobHue = pool[Math.floor(Math.random() * pool.length)];
-        blobSat = 70 + Math.random() * 20;   /* bright, candy-like */
-        blobLt = 45 + Math.random() * 20;    /* high lightness — visible color */
+        blobHue = pool[Math.floor(Math.random() * pool.length)] + (Math.random() - 0.5) * 30; /* spread hue ±15 */
+        blobSat = 80 + Math.random() * 20;   /* vivid, sparkly */
+        blobLt = 55 + Math.random() * 20;    /* bright — the twinkle adds more */
       } else if (renderMode && renderMode.mode === 'ink' && typeof renderMode.hue === 'function') {
         blobHue = renderMode.hue();
         blobSat = (renderMode.sat || 55) + Math.random() * 15;
@@ -172,10 +172,11 @@ export function createInkSystem(canvasEl) {
 
     /* ── Update blobs ── */
     for (const b of blobs) {
+      const drag = b.sprinkle ? 0.96 : 0.90; /* sprinkles drift further */
       b.x += b.vx;
       b.y += b.vy;
-      b.vx *= 0.90;
-      b.vy *= 0.90;
+      b.vx *= drag;
+      b.vy *= drag;
 
       /* Grow as velocity drops — diffusion accelerates when movement stops */
       const spd = Math.hypot(b.vx, b.vy);
@@ -185,21 +186,22 @@ export function createInkSystem(canvasEl) {
       }
 
       /* Pool into a stain once nearly stopped */
-      if (spd < POOL_SPEED) {
-        /* Sprinkle particles fade out instead of pooling into stains */
-        if (b.sprinkle) {
-          b.alive = false;
-        } else {
-          if (stains.length < MAX_STAINS) {
-            stains.push({
-              x: b.x, y: b.y,
-              r: b.r,
-              alpha: b.alpha,
-              hue: b.hue, sat: b.sat, lt: b.lt,
-            });
-          }
-          b.alive = false;
+      if (b.sprinkle) {
+        /* Sprinkle particles: slow fade-out instead of instant death */
+        if (spd < POOL_SPEED) {
+          b.alpha -= 0.012; /* gentle fade */
+          if (b.alpha <= 0) b.alive = false;
         }
+      } else if (spd < POOL_SPEED) {
+        if (stains.length < MAX_STAINS) {
+          stains.push({
+            x: b.x, y: b.y,
+            r: b.r,
+            alpha: b.alpha,
+            hue: b.hue, sat: b.sat, lt: b.lt,
+          });
+        }
+        b.alive = false;
       }
     }
     blobs = blobs.filter(b => b.alive);
@@ -245,12 +247,25 @@ export function createInkSystem(canvasEl) {
     ctx.drawImage(off, 0, 0);
     ctx.globalAlpha = 1;
 
-    /* Sprinkle particles: drawn directly on visible canvas — no blur,
-       crisp bright dots that look like candy sprinkles, not ink clouds */
+    /* Sprinkle particles: drawn directly on visible canvas — no blur.
+       Sparkle effect: oscillate lightness + add a soft glow ring. */
     for (const b of blobs) {
       if (!b.sprinkle) continue;
+      /* Twinkle: oscillate lightness for a sparkle effect */
+      const twinkle = Math.sin((b.x + b.y) * 0.05 + performance.now() * 0.008) * 0.5 + 0.5;
+      const lt = b.lt + twinkle * 20; /* pulse between base and base+20 */
+      const sat = b.sat + twinkle * 10;
+
+      /* Outer glow */
+      ctx.globalAlpha = b.alpha * 0.3;
+      ctx.fillStyle = `hsl(${b.hue},${sat}%,${lt + 15}%)`;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      /* Bright core */
       ctx.globalAlpha = b.alpha;
-      ctx.fillStyle = `hsl(${b.hue},${b.sat}%,${b.lt}%)`;
+      ctx.fillStyle = `hsl(${b.hue},${sat}%,${lt}%)`;
       ctx.beginPath();
       ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
       ctx.fill();
