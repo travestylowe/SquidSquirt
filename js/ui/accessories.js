@@ -164,12 +164,27 @@ const HATS = [
   {
     id: 'wizard-hat', name: 'Wizard Hat', unlock: 5000,
     svg: `<g transform="translate(200,18)">
-      <ellipse cx="0" cy="0" rx="36" ry="8" fill="#4c1d95"/>
-      <polygon points="0,-62 -28,0 28,0" fill="#5b21b6" stroke="#7c3aed" stroke-width="1"/>
-      <circle cx="-9" cy="-22" r="2.8" fill="#fbbf24"/>
-      <circle cx="7"  cy="-38" r="2.2" fill="#fbbf24"/>
-      <circle cx="-3" cy="-50" r="2"   fill="#fbbf24"/>
-      <circle cx="12" cy="-16" r="1.6" fill="#c084fc"/>
+      <!-- Glow aura -->
+      <ellipse cx="0" cy="-20" rx="50" ry="55" fill="url(#wizardGlow)" class="wizard-glow"/>
+      <!-- Brim — wide storybook style -->
+      <ellipse cx="0" cy="0" rx="42" ry="10" fill="#4c1d95" stroke="#7c3aed" stroke-width="0.8"/>
+      <!-- Cone — slightly curved with gentle tip curl -->
+      <path d="M-30,0 Q-18,-40 -4,-68 Q0,-72 4,-68 Q18,-40 30,0 Z" fill="#5b21b6" stroke="#7c3aed" stroke-width="1"/>
+      <!-- Buckle band -->
+      <rect x="-30" y="-4" width="60" height="7" rx="2" fill="#7c3aed" opacity="0.6"/>
+      <rect x="-5" y="-5" width="10" height="9" rx="1.5" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.6"/>
+      <!-- Crescent moon (left side) -->
+      <g transform="translate(-12,-36)">
+        <circle cx="0" cy="0" r="5" fill="#fbbf24"/>
+        <circle cx="2" cy="-1" r="4" fill="#5b21b6"/>
+      </g>
+      <!-- Shooting star (right side) -->
+      <g transform="translate(12,-48)">
+        <polygon points="0,-3 1.5,0 4,0 2,2 3,5 0,3 -3,5 -2,2 -4,0 -1.5,0" fill="#fbbf24" transform="scale(0.8)"/>
+        <line x1="4" y1="0" x2="14" y2="4" stroke="#fbbf24" stroke-width="0.8" opacity="0.7" stroke-linecap="round"/>
+        <line x1="4" y1="-1" x2="12" y2="1" stroke="#fbbf24" stroke-width="0.6" opacity="0.5" stroke-linecap="round"/>
+        <line x1="3" y1="1" x2="11" y2="5" stroke="#fbbf24" stroke-width="0.5" opacity="0.4" stroke-linecap="round"/>
+      </g>
     </g>`,
   },
 ];
