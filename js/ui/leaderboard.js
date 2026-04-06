@@ -45,7 +45,7 @@ function getDisplayName() {
 }
 
 function setDisplayName(name) {
-  const trimmed = name.trim().slice(0, 20);
+  const trimmed = name.trim().slice(0, 50);
   if (trimmed.length > 0) {
     localStorage.setItem(GAME.DISPLAY_NAME_KEY, trimmed);
   }
