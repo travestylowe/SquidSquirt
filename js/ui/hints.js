@@ -75,6 +75,7 @@ export function createHints(hintEl, taunts, thanks) {
   }
 
   function showTauntPun() {
+    hideStaticHint();
     spawnBubble(pickTauntPun(), 'bubble--taunt');
   }
 
