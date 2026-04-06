@@ -51,6 +51,7 @@ export function getDomRefs() {
     leaderboardPanel: document.getElementById('leaderboard-panel'),
     leaderboardClose: document.getElementById('leaderboard-close'),
     leaderboardNameInput: document.getElementById('leaderboard-name-input'),
+    leaderboardNameSave: document.getElementById('leaderboard-name-save'),
     leaderboardList: document.getElementById('leaderboard-list'),
     leaderboardRank: document.getElementById('leaderboard-rank'),
     /* Recovery */

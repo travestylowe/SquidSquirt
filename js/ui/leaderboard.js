@@ -66,11 +66,14 @@ export function createLeaderboard(refs) {
 
   /* Populate name input */
   refs.leaderboardNameInput.value = getDisplayName();
-  refs.leaderboardNameInput.addEventListener('change', async () => {
-    const val = refs.leaderboardNameInput.value.trim();
-    if (val.length === 0) return;
 
-    /* Try the name — server returns -1 if taken */
+  async function saveName() {
+    const val = refs.leaderboardNameInput.value.trim();
+    if (val.length === 0 || val === getDisplayName()) return;
+
+    refs.leaderboardNameSave.disabled = true;
+    refs.leaderboardNameSave.textContent = '...';
+
     try {
       const rank = await supabaseRpc('upsert_player_score', {
         p_player_id: playerId,
@@ -80,14 +83,22 @@ export function createLeaderboard(refs) {
       if (rank === -1) {
         refs.leaderboardRank.textContent = 'That name is taken!';
         refs.leaderboardNameInput.value = getDisplayName();
-        return;
+      } else {
+        setDisplayName(val);
+        refs.leaderboardRank.textContent = `Your rank: #${rank}`;
       }
-      setDisplayName(val);
-      refs.leaderboardRank.textContent = `Your rank: #${rank}`;
     } catch (err) {
       console.warn('name change failed:', err.message);
       refs.leaderboardNameInput.value = getDisplayName();
     }
+
+    refs.leaderboardNameSave.disabled = false;
+    refs.leaderboardNameSave.textContent = 'Save';
+  }
+
+  refs.leaderboardNameSave.addEventListener('click', saveName);
+  refs.leaderboardNameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') saveName();
   });
 
   /* Toggle panel */

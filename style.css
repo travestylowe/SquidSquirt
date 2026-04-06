@@ -1007,8 +1007,43 @@ body::before {
   color: #c4b5fd;
   margin: 0 0 12px;
 }
+.leaderboard-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+}
+.leaderboard-close-btn:hover {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.1);
+}
+.leaderboard-close-btn:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 2px;
+}
 .leaderboard-name-row {
   margin-bottom: 16px;
+}
+.leaderboard-name-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.leaderboard-name-input-row input { flex: 1; }
+.leaderboard-name-input-row .recovery-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
 }
 .leaderboard-list {
   display: flex;
