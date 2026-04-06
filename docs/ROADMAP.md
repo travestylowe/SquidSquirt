@@ -27,6 +27,13 @@
 - [x] **Save-state tooltip** — One-time tooltip on first visit near the counter: "Your progress saves automatically!" Shown for 4 seconds, fades out. First visit detected via `localStorage` flag.
 - [x] **Delay ambient bubbles on first visit** — Ambient bubble spawning delayed by 2.5 seconds on first visit so the "squeeze me" hint lands against a still background. Return visits spawn immediately.
 
-## Decided Against
-
-- **Leaderboard** — Would require tracking visitor identity; not desired for this project.
+- [x] **Ink vibrancy fix** — Boosted saturation (70–85%) and lightness (30–45%) for all 8 ink colors. Rainbow ink hues now visually distinct instead of converging toward muddy brown.
+- [x] **Bow & Arrow confetti** — New confetti shape at 500 squirts, filling the 350→750 gap. Recurve bow with nocked arrow, fletching detail.
+- [x] **SVG overflow fix** — Added `overflow: visible` to `#squid-svg` so tall hats (wizard, top hat) are no longer clipped at the viewBox top edge.
+- [x] **Wizard hat redesign** — Storybook style: wider brim, curved cone, buckle band, crescent moon (left), shooting star with trail streaks (right), pulsing purple glow aura. Respects `prefers-reduced-motion`.
+- [x] **Immersive landscape mode** — Pure CSS via `@media (orientation: landscape) and (max-height: 500px)`. Counter becomes floating overlay, controls shrink to corner icons, global bar hides, squid fills viewport.
+- [x] **Round-robin payments** — Payment types now cycle through all 10 before repeating (random pick from unused pool). Replaces deterministic hash that always mapped the same item to the same payment.
+- [x] **Submission persistence** — Compliments, confessions, and puns from the payment system save to Supabase `submissions` table with player name and review status (pending/keep/publish/delete).
+- [x] **In-game feedback form** — Feedback button in floating controls opens a modal with dropdown (Bug Report / Feature Request / Just Saying Hi) + textarea. Submits to Supabase `feedback` table. Gracefully hidden when Supabase not configured.
+- [x] **Anonymous leaderboard** — Floating button opens panel showing top 10 + player rank. Auto-generated fun names (e.g., "Squishy Narwhal"), optional custom nickname. Periodic sync every 30 squirts. Existing local scores auto-upload on first visit.
+- [x] **Easter egg fixes** — Rapid-fire detection fixed (was off-by-one, requiring 11 squirts instead of 10). Midnight trigger widened to 30-second window around midnight PST.
