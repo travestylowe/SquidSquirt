@@ -189,7 +189,7 @@ export function createInkSystem(canvasEl) {
       if (b.sprinkle) {
         /* Sprinkle particles: slow fade-out instead of instant death */
         if (spd < POOL_SPEED) {
-          b.alpha -= 0.003; /* slow fade — lingers ~5s */
+          b.alpha -= 0.0015; /* very slow fade — lingers ~10s */
           if (b.alpha <= 0) b.alive = false;
         }
       } else if (spd < POOL_SPEED) {
