@@ -87,6 +87,7 @@ export const GAME = {
   UNLOCK_KEY: 'squ',       /* unlocked item IDs */
   UNLOCK_PIN_KEY: 'sqp',   /* pinned selections */
   UNLOCK_TXN_KEY: 'sqt',   /* microtransaction completions */
+  PAYMENT_HISTORY_KEY: 'sqph',  /* recently used payment type indices */
 
   // Ink color unlock thresholds (squirt count)
   INK_THRESHOLDS: [10, 30, 60, 100, 175, 300, 500, 1000],

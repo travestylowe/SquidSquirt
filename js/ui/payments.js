@@ -69,19 +69,40 @@ const PAYMENT_TYPES = [
   },
 ];
 
-/** Deterministic payment assignment seeded by item ID string. */
-function hashCode(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
+/** Round-robin payment selection — cycles all 10 types before repeating. */
+const HISTORY_KEY = 'sqph';
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (_) { return []; }
 }
 
-export function getPaymentForItem(itemId) {
-  const idx = hashCode(itemId) % PAYMENT_TYPES.length;
-  return PAYMENT_TYPES[idx];
+function saveHistory(history) {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }
+  catch (_) { /* localStorage full — continue without persistence */ }
+}
+
+export function getPaymentForItem(_itemId) {
+  let history = loadHistory();
+
+  /* Build pool of unused indices */
+  const allIndices = Array.from({ length: PAYMENT_TYPES.length }, (_, i) => i);
+  let available = allIndices.filter(i => !history.includes(i));
+
+  /* If all used, reset the cycle */
+  if (available.length === 0) {
+    history = [];
+    available = allIndices;
+  }
+
+  /* Pick random from available (not purely sequential — adds surprise) */
+  const pick = available[Math.floor(Math.random() * available.length)];
+  history.push(pick);
+  saveHistory(history);
+
+  return PAYMENT_TYPES[pick];
 }
 
 /** Trivia questions — loaded once from data/trivia.json */
