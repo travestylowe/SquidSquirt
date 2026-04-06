@@ -1,10 +1,19 @@
 import { GAME } from '../constants.js';
+import { isSupabaseConfigured, supabaseInsert } from '../counter/supabaseClient.js';
 
 /**
  * 10 silly payment types.  Each has a `run` function that takes over the
  * payment modal and resolves a promise when the player "pays."
  * The promise resolves `true` on success, `false` if cancelled.
  */
+
+/** Save a text submission to Supabase (fire-and-forget). */
+function saveSubmission(type, content) {
+  if (!isSupabaseConfigured()) return;
+  const playerName = localStorage.getItem('sq_display_name') || null;
+  supabaseInsert('submissions', { type, content, player_name: playerName })
+    .catch(err => { console.warn('submission save failed:', err.message); });
+}
 
 const PAYMENT_TYPES = [
   {
@@ -210,6 +219,7 @@ function runCompliment(refs, resolve, { triggerBlush } = {}) {
   btn.disabled = true;
   input.addEventListener('input', () => { btn.disabled = input.value.trim().length < 3; });
   btn.addEventListener('click', () => {
+    saveSubmission('compliment', input.value.trim());
     refs.paymentBody.textContent = 'The squid is blushing! \u{1F97A}';
     refs.paymentActions.innerHTML = '';
     if (triggerBlush) triggerBlush();
@@ -230,6 +240,7 @@ function runConfession(refs, resolve) {
   btn.disabled = true;
   textarea.addEventListener('input', () => { btn.disabled = textarea.value.trim().length < 5; });
   btn.addEventListener('click', () => {
+    saveSubmission('confession', textarea.value.trim());
     refs.paymentBody.textContent = 'Your secret is safe with the squid. Probably. \u{1F92B}';
     refs.paymentActions.innerHTML = '';
     setTimeout(() => { refs.paymentModal.hidden = true; resolve(true); }, 1200);
@@ -395,6 +406,7 @@ function runPun(refs, resolve) {
   ];
 
   btn.addEventListener('click', () => {
+    saveSubmission('pun', input.value.trim());
     const judgment = judgments[Math.floor(Math.random() * judgments.length)];
     refs.paymentBody.textContent = judgment;
     refs.paymentActions.innerHTML = '';
