@@ -213,6 +213,17 @@
       </div>
       <div id="leaderboard-list" class="leaderboard-list"></div>
       <div id="leaderboard-rank" class="leaderboard-rank"></div>
+      <div class="recovery-section">
+        <button id="recovery-toggle" class="recovery-toggle">Transfer Account</button>
+        <div id="recovery-content" class="recovery-content" hidden>
+          <div id="recovery-code-display" class="recovery-code-display"></div>
+          <button id="recovery-show-btn" class="recovery-btn">Show My Code</button>
+          <div class="recovery-divider">or recover on this device</div>
+          <input id="recovery-input" type="text" class="feedback-textarea" style="resize:none;height:auto;padding:6px 10px" placeholder="Paste recovery code here" maxlength="60"/>
+          <button id="recovery-apply-btn" class="recovery-btn" disabled>Recover</button>
+          <div id="recovery-status" class="recovery-status"></div>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -53,5 +53,13 @@ export function getDomRefs() {
     leaderboardNameInput: document.getElementById('leaderboard-name-input'),
     leaderboardList: document.getElementById('leaderboard-list'),
     leaderboardRank: document.getElementById('leaderboard-rank'),
+    /* Recovery */
+    recoveryToggle: document.getElementById('recovery-toggle'),
+    recoveryContent: document.getElementById('recovery-content'),
+    recoveryCodeDisplay: document.getElementById('recovery-code-display'),
+    recoveryShowBtn: document.getElementById('recovery-show-btn'),
+    recoveryInput: document.getElementById('recovery-input'),
+    recoveryApplyBtn: document.getElementById('recovery-apply-btn'),
+    recoveryStatus: document.getElementById('recovery-status'),
   };
 }

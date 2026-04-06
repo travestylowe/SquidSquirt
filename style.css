@@ -1039,6 +1039,67 @@ body::before {
   font-size: 0.95rem;
 }
 
+/* ── Recovery code ── */
+.recovery-section {
+  margin-top: 16px;
+  border-top: 1px solid #312e81;
+  padding-top: 12px;
+}
+.recovery-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px;
+}
+.recovery-toggle:hover { color: #a78bfa; }
+.recovery-content {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.recovery-code-display {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  text-align: center;
+  color: #fbbf24;
+  word-break: break-all;
+  user-select: all;
+  min-height: 0;
+}
+.recovery-code-display:empty { display: none; }
+.recovery-btn {
+  padding: 6px 12px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #c4b5fd;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.recovery-btn:hover { background: #312e81; }
+.recovery-btn:disabled { opacity: 0.4; cursor: default; }
+.recovery-divider {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #475569;
+  margin: 4px 0;
+}
+.recovery-status {
+  text-align: center;
+  font-size: 0.8rem;
+  min-height: 1.2em;
+}
+.recovery-status.success { color: #4ade80; }
+.recovery-status.error { color: #f87171; }
+
 /* ── Landscape immersive ── */
 @media (orientation: landscape) and (max-height: 500px) {
   #counter-section {

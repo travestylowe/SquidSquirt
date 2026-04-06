@@ -25,7 +25,11 @@ create policy "anon_update" on leaderboard
 
 grant select, insert, update on leaderboard to anon;
 
--- RPC: upsert player score and return their rank
+-- Case-insensitive unique display names (two players can't share a name)
+create unique index leaderboard_display_name_lower on leaderboard (lower(display_name));
+
+-- RPC: upsert player score and return their rank.
+-- Returns -1 if the display_name is already taken by a different player.
 create or replace function upsert_player_score(
   p_player_id text,
   p_display_name text,
@@ -35,8 +39,20 @@ returns int
 language plpgsql
 security definer
 as $$
-declare player_rank int;
+declare
+  player_rank int;
+  existing_owner text;
 begin
+  -- Check if another player already owns this display name
+  select player_id into existing_owner
+    from leaderboard
+   where lower(display_name) = lower(p_display_name)
+     and player_id <> p_player_id;
+
+  if existing_owner is not null then
+    return -1;  -- name taken
+  end if;
+
   insert into leaderboard (player_id, display_name, squirt_count, last_updated)
   values (p_player_id, p_display_name, p_squirt_count, now())
   on conflict (player_id) do update
@@ -65,5 +81,18 @@ as $$
    limit n;
 $$;
 
+-- RPC: look up a player by ID (for recovery code verification)
+create or replace function get_player_by_id(p_player_id text)
+returns table(display_name text, squirt_count int)
+language sql
+security definer
+as $$
+  select display_name, squirt_count
+    from leaderboard
+   where player_id = p_player_id
+   limit 1;
+$$;
+
 grant execute on function upsert_player_score(text, text, int) to anon;
 grant execute on function get_leaderboard(int) to anon;
+grant execute on function get_player_by_id(text) to anon;
